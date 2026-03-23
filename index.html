@@ -1281,20 +1281,23 @@
 </script>
 
 <!-- Google Reviews -->
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmqX39_2MSwPE-1j72wiV7GIprUQYJzlg&libraries=places&v=weekly&loading=async&callback=initReviews">
+</script>
 <script>
-  function initReviews() {
-    const service = new google.maps.places.PlacesService(document.createElement('div'));
-    service.getDetails({
-      placeId: 'ChIJf9p5e2KAhYAR1gVravhN_to',
-      fields: ['name', 'rating', 'user_ratings_total', 'reviews']
-    }, function(place, status) {
-      if (status !== google.maps.places.PlacesServiceStatus.OK) {
-        document.getElementById('reviewsGrid').innerHTML = '<p class="reviews-loading">Reviews unavailable right now.</p>';
-        return;
-      }
+  async function initReviews() {
+    try {
+      const { Place } = await google.maps.importLibrary('places');
+      const place = new Place({
+        id: 'ChIJf9p5e2KAhYAR1gVravhN_to',
+        requestedLanguage: 'en'
+      });
+      await place.fetchFields({ fields: ['displayName', 'rating', 'userRatingCount', 'reviews'] });
+
       // Overall rating
       document.getElementById('overallRating').textContent = place.rating.toFixed(1);
-      document.getElementById('overallCount').textContent = place.user_ratings_total + ' Google reviews';
+      document.getElementById('overallCount').textContent = place.userRatingCount + ' Google reviews';
+
       // Review cards
       const reviews = (place.reviews || []).slice(0, 6);
       if (!reviews.length) {
@@ -1302,19 +1305,24 @@
         return;
       }
       document.getElementById('reviewsGrid').innerHTML = reviews.map(r => {
-        const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-        const initial = r.author_name ? r.author_name[0].toUpperCase() : '?';
-        const avatar = r.profile_photo_url
-          ? `<img src="${r.profile_photo_url}" alt="${r.author_name}" loading="lazy" />`
+        const rating = r.rating || 5;
+        const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        const authorName = r.authorAttribution?.displayName || 'Google Reviewer';
+        const photoURI = r.authorAttribution?.photoURI;
+        const initial = authorName[0].toUpperCase();
+        const avatar = photoURI
+          ? `<img src="${photoURI}" alt="${authorName}" loading="lazy" />`
           : initial;
-        const text = r.text.length > 220 ? r.text.slice(0, 220).trim() + '…' : r.text;
+        const rawText = r.text?.text || '';
+        const text = rawText.length > 220 ? rawText.slice(0, 220).trim() + '…' : rawText;
+        const timeDesc = r.relativePublishTimeDescription || '';
         return `
           <div class="review-card fade-in">
             <div class="review-top">
               <div class="review-avatar">${avatar}</div>
               <div>
-                <div class="review-author">${r.author_name}</div>
-                <div class="review-date">${r.relative_time_description}</div>
+                <div class="review-author">${authorName}</div>
+                <div class="review-date">${timeDesc}</div>
               </div>
             </div>
             <div class="review-stars">${stars}</div>
@@ -1325,9 +1333,11 @@
             </div>
           </div>`;
       }).join('');
-    });
+    } catch (err) {
+      document.getElementById('reviewsGrid').innerHTML = '<p class="reviews-loading">Reviews unavailable right now.</p>';
+      console.error('Reviews error:', err);
+    }
   }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmqX39_2MSwPE-1j72wiV7GIprUQYJzlg&libraries=places&callback=initReviews" async defer></script>
 </body>
 </html>
