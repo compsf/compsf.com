@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CompSF IT &amp; Cyber Solutions | San Francisco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: 'WildanCar';
+      src: url('Wildan carFont - Adegoke.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #1c1c1c; overflow-x: hidden; }
+
+    :root {
+      --black:        #1c1c1c;
+      --charcoal:     #2d2d2d;
+      --orange:       #e07020;
+      --blood-orange: #bf3500;
+      --sf-red:       #9b1520;
+      --white:        #ffffff;
+      --off-white:    #f8f8f8;
+      --light-grey:   #f2f2f2;
+      --border:       #e0e0e0;
+      --text-muted:   #666666;
+      --text-light:   #999999;
+      --transition:   0.28s ease;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f2f2f2; }
+    ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+    /* ===== NAVBAR ===== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 80px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow var(--transition);
+    }
+    .nav-logo img { height: 62px; width: auto; display: block; }
+    .nav-links { display: flex; gap: 30px; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.88rem;
+      font-weight: 500; transition: color var(--transition);
+      position: relative; padding-bottom: 3px;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 2px; background: var(--orange);
+      transition: width var(--transition);
+    }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--orange) 0%, var(--blood-orange) 100%) !important;
+      color: #fff !important;
+      padding: 7px 22px 13px; border-radius: 50px;
+      font-weight: 700 !important; font-size: 0.87rem !important;
+      display: flex !important; align-items: center; justify-content: center;
+      width: fit-content; white-space: nowrap; text-align: center;
+      line-height: 1;
+      box-shadow: 0 2px 8px rgba(191,53,0,0.25), 0 1px 2px rgba(0,0,0,0.12);
+      transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1.5px solid rgba(255,255,255,0.15) !important;
+    }
+    .nav-cta:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(191,53,0,0.35) !important; }
+    .nav-cta:active { transform: scale(0.97); }
+    .nav-cta::before, .nav-cta::after { display: none !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--black); border-radius: 2px; }
+
+    .mobile-menu {
+      position: fixed; top: 80px; left: 0; right: 0;
+      background: #fff; border-bottom: 1px solid var(--border);
+      padding: 20px 5%; z-index: 999;
+      display: none; flex-direction: column; gap: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: var(--black); text-decoration: none; font-size: 1rem; font-weight: 500; }
+
+    /* ===== HERO ===== */
+    #home {
+      min-height: 100vh; background: var(--charcoal);
+      display: flex; align-items: center;
+      padding: 110px 5% 80px; position: relative; overflow: hidden;
+    }
+    .hero-bg-accent {
+      position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+      background: linear-gradient(135deg, transparent 40%, rgba(191,53,0,0.08) 100%);
+      pointer-events: none;
+    }
+    .hero-stripe {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--sf-red), var(--blood-orange), var(--orange));
+    }
+    .hero-inner {
+      position: relative; width: 100%;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 60px; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(224,112,32,0.15); border: 1px solid rgba(224,112,32,0.35);
+      color: var(--orange); font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 6px 16px; border-radius: 50px; margin-bottom: 22px;
+    }
+    .hero-badge::before {
+      content: ''; width: 7px; height: 7px;
+      background: var(--orange); border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero-title {
+      font-family: 'WildanCar', 'Inter', sans-serif;
+      font-size: clamp(2.6rem, 5vw, 4.2rem);
+      font-weight: 700; line-height: 1.1; color: #fff; margin-bottom: 18px;
+    }
+    .hero-title .line-orange { color: var(--orange); }
+    .hero-title .line-red   { color: var(--blood-orange); }
+    .hero-subtitle {
+      font-size: 1.05rem; color: rgba(255,255,255,0.65);
+      line-height: 1.75; margin-bottom: 36px; max-width: 520px;
+    }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 50px; }
+    .btn-primary {
+      background: var(--orange); color: #fff; padding: 13px 30px;
+      border-radius: 7px; font-weight: 600; font-size: 0.92rem;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: all var(--transition); display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--blood-orange); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 8px 20px rgba(191,53,0,0.3); }
+    .btn-primary:active { transform: translateY(0); box-shadow: none; }
+    .btn-primary:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+    .btn-outline-white {
+      background: transparent; color: #fff; padding: 13px 30px;
+      border-radius: 7px; font-weight: 600; font-size: 0.92rem;
+      text-decoration: none; border: 1px solid rgba(255,255,255,0.25);
+      cursor: pointer; transition: all var(--transition);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline-white:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.07); }
+    .btn-outline-white:active { background: rgba(255,255,255,0.14); transform: translateY(0); }
+    .btn-outline-white:focus-visible { outline: 3px solid rgba(255,255,255,0.6); outline-offset: 3px; }
+    .hero-stats {
+      display: flex; gap: 36px; flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 28px;
+    }
+    .stat-number {
+      font-family: 'WildanCar', 'Inter', sans-serif;
+      font-size: 2.1rem; font-weight: 700; color: var(--orange); line-height: 1;
+    }
+    .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    /* Hero video */
+    .hero-video-wrap { position: relative; flex-shrink: 0; width: 560px; }
+    .hero-video-frame {
+      width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden;
+      border: 2px solid rgba(224,112,32,0.5);
+      box-shadow: 0 0 0 8px rgba(224,112,32,0.08), 0 20px 50px rgba(0,0,0,0.5);
+      background: #000; position: relative;
+    }
+    .hero-video-frame video { width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* Video controls bar */
+    .video-controls {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 28px 14px 12px;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+      display: flex; align-items: center; gap: 8px; z-index: 2;
+    }
+    .vc-btn {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      color: #fff; border-radius: 50%; width: 36px; height: 36px;
+      font-size: 0.95rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(6px); transition: background 0.2s ease; flex-shrink: 0;
+    }
+    .vc-btn:hover { background: rgba(224,112,32,0.6); border-color: var(--orange); }
+    .vc-progress {
+      flex: 1; height: 3px; background: rgba(255,255,255,0.2);
+      border-radius: 3px; cursor: pointer; position: relative; margin: 0 4px;
+    }
+    .vc-progress-fill { height:100%; background:var(--orange); border-radius:3px; width:0%; pointer-events:none; }
+
+    /* Click-to-play overlay */
+    .video-click-overlay {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 56px;
+      cursor: pointer; z-index: 1;
+    }
+    .video-click-icon {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%) scale(0);
+      width: 60px; height: 60px; background: rgba(0,0,0,0.55);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: #fff; pointer-events: none;
+      transition: transform 0.15s ease, opacity 0.3s ease; opacity: 0;
+    }
+    .video-click-icon.show { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+
+    /* ===== GALLERY VIDEOS ===== */
+    .gallery-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    }
+    .gallery-video-label {
+      font-weight: 700; font-size: 1rem; letter-spacing: -0.01em;
+      color: var(--black); margin-bottom: 14px; text-align: center;
+    }
+    .gallery-video-frame {
+      width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden;
+      border: 2px solid rgba(224,112,32,0.4);
+      box-shadow: 0 0 0 6px rgba(224,112,32,0.07), 0 16px 40px rgba(0,0,0,0.25);
+      background: #000; position: relative;
+    }
+    .gallery-video-frame video { width:100%; height:100%; object-fit:cover; display:block; }
+    @media (max-width:820px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== CERT STRIP ===== */
+    .cert-strip { background: var(--black); padding: 16px 0; overflow: hidden; }
+    .cert-strip-track {
+      display: flex; gap: 56px;
+      animation: marquee 32s linear infinite; width: max-content;
+    }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .cert-strip-item {
+      display: flex; align-items: center; gap: 10px;
+      color: rgba(255,255,255,0.55); font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; white-space: nowrap;
+    }
+    .cert-strip-item .dot { color: var(--orange); }
+
+    /* ===== SECTIONS ===== */
+    section { padding: 90px 5%; }
+    .inner { max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'WildanCar', 'Inter', sans-serif;
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem); font-weight: 700;
+      color: var(--black); line-height: 1.15; margin-bottom: 14px;
+    }
+    .section-title span { color: var(--blood-orange); }
+    .section-title.white-title { color: #fff; }
+    .section-title.white-title span { color: var(--orange); }
+    .section-desc { color: var(--text-muted); font-size: 0.97rem; line-height: 1.75; max-width: 560px; }
+    .divider {
+      width: 52px; height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--blood-orange));
+      border-radius: 2px; margin-top: 14px; margin-bottom: 40px;
+    }
+    .divider.center { margin-left: auto; margin-right: auto; }
+
+    /* ===== ABOUT ===== */
+    #about { background: var(--off-white); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 70px; align-items: center; }
+    .about-photos { display: flex; flex-direction: column; gap: 16px; }
+    .about-img-frame {
+      border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.09);
+      position: relative;
+    }
+    .about-img-frame img { width: 100%; display: block; object-fit: cover; }
+    .about-img-frame.action img { max-height: 200px; object-position: center 30%; }
+    .about-img-badge {
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      background: rgba(28,28,28,0.88); backdrop-filter: blur(8px);
+      color: #fff; font-size: 0.78rem; padding: 8px 20px;
+      border-radius: 50px; white-space: nowrap; font-weight: 500;
+    }
+    .about-img-badge strong { color: var(--orange); }
+    .expertise-chips { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 32px; }
+    .chip {
+      background: #fff; border: 1px solid var(--border); color: var(--text-muted);
+      font-size: 0.78rem; font-weight: 500; padding: 6px 14px; border-radius: 50px;
+      transition: all var(--transition); cursor: default;
+    }
+    .chip:hover { border-color: var(--orange); color: var(--orange); background: rgba(224,112,32,0.05); }
+    .cert-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cert-item {
+      display: flex; align-items: center; gap: 10px;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 8px; padding: 11px 14px;
+      font-size: 0.8rem; color: var(--text-muted); font-weight: 500;
+    }
+    .cert-item-icon {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, var(--orange), var(--blood-orange));
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; flex-shrink: 0;
+    }
+
+    /* ===== SERVICES ===== */
+    #services { background: #fff; }
+    .services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .service-card {
+      background: var(--off-white); border: 1px solid var(--border);
+      border-radius: 14px; padding: 32px 26px;
+      transition: all var(--transition); position: relative; overflow: hidden;
+    }
+    .service-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--blood-orange));
+      transform: scaleX(0); transform-origin: left; transition: transform var(--transition);
+    }
+    .service-card:hover { border-color: var(--orange); transform: translateY(-5px); box-shadow: 0 16px 40px rgba(224,112,32,0.1); }
+    .service-card:hover::after { transform: scaleX(1); }
+    .service-icon {
+      width: 50px; height: 50px;
+      background: linear-gradient(135deg, var(--orange), var(--blood-orange));
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem; margin-bottom: 20px; color: #fff;
+    }
+    .service-card h3 {
+      font-family: 'WildanCar', 'Inter', sans-serif;
+      font-size: 1.2rem; font-weight: 700; color: var(--black); margin-bottom: 10px;
+    }
+    .service-card ul { list-style: none; }
+    .service-card ul li {
+      color: var(--text-muted); font-size: 0.82rem; line-height: 1.65;
+      padding: 3px 0 3px 14px; position: relative;
+    }
+    .service-card ul li::before { content:'›'; position:absolute; left:0; color:var(--orange); font-weight:700; }
+
+    /* ===== RETAINER ===== */
+    #retainer { background: var(--charcoal); position: relative; overflow: hidden; }
+    #retainer::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--sf-red), var(--blood-orange), var(--orange));
+    }
+    .retainer-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-bottom: 56px; }
+    .retainer-desc { color: rgba(255,255,255,0.6); font-size: 0.97rem; line-height: 1.75; }
+    .retainer-highlight {
+      background: rgba(224,112,32,0.12); border: 1px solid rgba(224,112,32,0.3);
+      border-radius: 12px; padding: 24px 28px;
+    }
+    .retainer-highlight h4 {
+      font-family: 'WildanCar','Inter',sans-serif; font-size: 1.1rem;
+      font-weight: 700; color: var(--orange); margin-bottom: 12px;
+    }
+    .retainer-highlight p { font-size: 0.85rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+    .retainer-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .retainer-item {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px; padding: 20px 18px; transition: all var(--transition);
+    }
+    .retainer-item:hover { background: rgba(224,112,32,0.08); border-color: rgba(224,112,32,0.3); }
+    .retainer-item-title {
+      font-weight: 700; font-size: 0.88rem; color: #fff;
+      margin-bottom: 5px; display: flex; align-items: center; gap: 8px;
+    }
+    .retainer-item-title span { width:6px; height:6px; background:var(--orange); border-radius:50%; flex-shrink:0; }
+    .retainer-item-sub { font-size: 0.78rem; color: rgba(255,255,255,0.45); line-height: 1.6; padding-left: 14px; }
+    .retainer-note { margin-top: 28px; font-size: 0.8rem; color: rgba(255,255,255,0.35); text-align: center; font-style: italic; }
+
+    /* ===== TEAM ===== */
+    #team { background: var(--off-white); }
+    .team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    .team-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; transition: all var(--transition);
+    }
+    .team-card:hover { border-color: var(--orange); transform: translateY(-6px); box-shadow: 0 8px 16px rgba(0,0,0,0.06), 0 16px 40px rgba(224,112,32,0.12); }
+    .team-card:active { transform: translateY(-2px); }
+    .team-photo-wrap { position: relative; width: 100%; aspect-ratio: 1/1.1; overflow: hidden; background: #e8e8e8; }
+    .team-photo-wrap img { width:100%; height:100%; object-fit:cover; object-position:top; transition:transform 0.5s ease; filter:grayscale(15%); }
+    .team-card:hover .team-photo-wrap img { transform:scale(1.05); filter:grayscale(0%); }
+    .team-brand-bar {
+      position: absolute; bottom:0; left:0; right:0;
+      background: linear-gradient(to top, rgba(28,28,28,0.92) 0%, transparent 100%);
+      padding: 24px 12px 8px; display: flex; justify-content: flex-end;
+    }
+    .team-brand-bar img { height:18px; width:auto; opacity:0.85; filter:brightness(0) invert(1); }
+    .team-info { padding: 16px 14px 18px; }
+    .team-name { font-family:'WildanCar','Inter',sans-serif; font-size:1.05rem; font-weight:700; color:var(--black); margin-bottom:3px; }
+    .team-role { font-size:0.73rem; color:var(--blood-orange); font-weight:600; letter-spacing:0.4px; text-transform:uppercase; margin-bottom:10px; }
+    .team-skills { display:flex; flex-wrap:wrap; gap:5px; }
+    .team-skill { font-size:0.68rem; background:var(--light-grey); border:1px solid var(--border); color:var(--text-muted); padding:3px 8px; border-radius:4px; font-weight:500; }
+
+    /* ===== WHY ===== */
+    #why { background: #fff; }
+    .why-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .why-item { border:1px solid var(--border); border-radius:12px; padding:28px; transition:all var(--transition); background:var(--off-white); }
+    .why-item:hover { border-color:var(--orange); background:#fff; box-shadow:0 8px 24px rgba(224,112,32,0.08); }
+    .why-icon { width:46px; height:46px; border-radius:11px; background:linear-gradient(135deg,var(--orange),var(--blood-orange)); display:flex; align-items:center; justify-content:center; font-size:1.2rem; margin-bottom:16px; }
+    .why-item h4 { font-family:'WildanCar','Inter',sans-serif; font-size:1.05rem; font-weight:700; color:var(--black); margin-bottom:8px; }
+    .why-item p { font-size:0.84rem; color:var(--text-muted); line-height:1.65; }
+
+    /* ===== CONTACT ===== */
+    #contact { background: var(--light-grey); }
+    .contact-wrap { display:grid; grid-template-columns:1fr 1.1fr; gap:70px; align-items:start; }
+    .contact-info-row { display:flex; gap:16px; align-items:flex-start; margin-bottom:24px; }
+    .contact-icon { width:44px; height:44px; background:linear-gradient(135deg,var(--orange),var(--blood-orange)); border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; color:#fff; }
+    .contact-info-row h5 { font-size:0.74rem; color:var(--text-light); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:3px; }
+    .contact-info-row a, .contact-info-row p { color:var(--black); font-size:0.95rem; font-weight:500; text-decoration:none; transition:color var(--transition); }
+    .contact-info-row a:hover { color:var(--orange); }
+    .contact-form { background:#fff; border:1px solid var(--border); border-radius:16px; padding:36px; box-shadow:0 8px 30px rgba(0,0,0,0.05); }
+    .contact-form h3 { font-family:'WildanCar','Inter',sans-serif; font-size:1.35rem; font-weight:700; color:var(--black); margin-bottom:24px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block; font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-bottom:7px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; background:var(--off-white); border:1px solid var(--border);
+      border-radius:7px; padding:11px 14px; color:var(--black); font-size:0.88rem;
+      font-family:'Inter',sans-serif; outline:none; resize:none;
+      transition:border-color var(--transition), box-shadow var(--transition);
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(224,112,32,0.1); }
+    .form-group textarea { height:110px; }
+    .btn-submit { width:100%; background:var(--orange); color:#fff; padding:14px; border:none; border-radius:7px; font-size:0.95rem; font-weight:700; cursor:pointer; transition:all var(--transition); font-family:'Inter',sans-serif; }
+    .btn-submit:hover { background:var(--blood-orange); transform:translateY(-1px); box-shadow:0 4px 8px rgba(0,0,0,0.1), 0 6px 18px rgba(191,53,0,0.25); }
+    .btn-submit:active { transform:translateY(0); box-shadow:none; }
+    .btn-submit:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+
+    /* ===== FOOTER ===== */
+    footer { background:var(--black); padding:36px 5%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+    .footer-logo img { height:36px; width:auto; }
+    .footer-links { display:flex; gap:24px; list-style:none; }
+    .footer-links a { color:rgba(255,255,255,0.45); text-decoration:none; font-size:0.82rem; transition:color var(--transition); }
+    .footer-links a:hover { color:var(--orange); }
+    .footer-copy { color:rgba(255,255,255,0.3); font-size:0.78rem; }
+
+    /* ===== FADE-IN ===== */
+    .fade-in { opacity:0; transform:translateY(26px); transition:opacity 0.55s ease, transform 0.55s ease; }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width:1100px) {
+      .team-grid { grid-template-columns:repeat(2,1fr); }
+      .retainer-grid { grid-template-columns:repeat(2,1fr); }
+      .hero-video-wrap { width:420px; }
+    }
+    @media (max-width:900px) {
+      .services-grid { grid-template-columns:1fr 1fr; }
+      .why-grid { grid-template-columns:1fr 1fr; }
+      .about-grid { grid-template-columns:1fr; }
+      .retainer-intro { grid-template-columns:1fr; gap:30px; }
+      .contact-wrap { grid-template-columns:1fr; gap:40px; }
+      .hero-inner { grid-template-columns:1fr; }
+      .hero-video-wrap { display:none; }
+    }
+    @media (max-width:660px) {
+      .services-grid { grid-template-columns:1fr; }
+      .team-grid { grid-template-columns:1fr 1fr; }
+      .why-grid { grid-template-columns:1fr; }
+      .retainer-grid { grid-template-columns:1fr; }
+      .nav-links { display:none; }
+      .hamburger { display:flex; }
+      .form-row { grid-template-columns:1fr; }
+      .cert-list { grid-template-columns:1fr; }
+    }
+    /* Back to top button */
+    #backToTop {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 9999;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(224,112,32,0.4), 0 1px 4px rgba(0,0,0,0.18);
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+      pointer-events: none;
+    }
+    #backToTop.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    #backToTop:hover { background: var(--blood-orange); }
+    #backToTop:active { transform: scale(0.93); }
+    #backToTop svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+</head>
+<body>
+
+<!-- BACK TO TOP BUTTON -->
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- NAVBAR -->
+<nav id="mainNav">
+  <a href="#home" class="nav-logo">
+    <img src="Logo_CompSF_wTagline_Color_01_RGB.png" alt="CompSF IT & Cyber Solutions" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#retainer">Monthly IT</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="#contact" class="nav-cta">Let's Talk &rarr;</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home"     onclick="toggleMenu()">Home</a>
+  <a href="#about"    onclick="toggleMenu()">About</a>
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#retainer" onclick="toggleMenu()">Monthly IT</a>
+  <a href="#team"     onclick="toggleMenu()">Team</a>
+  <a href="#videos"   onclick="toggleMenu()">Videos</a>
+  <a href="#contact"  onclick="toggleMenu()">Contact Us</a>
+</div>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg-accent"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">&#9679; San Francisco &middot; Bay Area &middot; US</div>
+      <h1 class="hero-title">
+        Expert <span class="line-orange">IT &amp; Cyber</span><br>
+        Security<br>
+        <span class="line-red">Solutions</span>
+      </h1>
+      <p class="hero-subtitle">
+        We help Bay Area businesses stay secure, connected, and stress-free. Real people, fast response, and IT support that actually makes sense. No jargon. No runaround.
+      </p>
+      <div class="hero-actions">
+        <a href="#retainer" class="btn-primary">Monthly Managed IT &#8594;</a>
+        <a href="#contact" class="btn-outline-white">&#128222; Free Consultation</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-number">2003</div><div class="stat-label">Supporting Businesses Since</div></div>
+        <div class="stat-item"><div class="stat-number">200+</div><div class="stat-label">Clients Supported</div></div>
+        <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Monitoring</div></div>
+        <div class="stat-item"><div class="stat-number">99.9%</div><div class="stat-label">Uptime Delivered</div></div>
+      </div>
+    </div>
+
+    <!-- Hero video -->
+    <div class="hero-video-wrap">
+      <div class="hero-video-frame">
+        <video id="heroVideo" src="Homepage-CompSF-Video_v2.mp4" autoplay muted playsinline loop></video>
+        <div class="video-click-overlay" onclick="togglePlay()">
+          <div class="video-click-icon" id="heroClickIcon"></div>
+        </div>
+        <div class="video-controls">
+          <button class="vc-btn" onclick="videoRewind()" title="Restart">&#8635;</button>
+          <button class="vc-btn" id="playBtn" onclick="togglePlay()" title="Play/Pause">&#10074;&#10074;</button>
+          <div class="vc-progress" id="vcProgress" onclick="videoSeek(event)">
+            <div class="vc-progress-fill" id="vcFill"></div>
+          </div>
+          <button class="vc-btn" id="muteBtn" onclick="toggleMute()" title="Sound">&#128264;</button>
+          <button class="vc-btn" id="fsBtn" onclick="toggleFullscreen()" title="Fullscreen">&#x26F6;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERT STRIP -->
+<div class="cert-strip">
+  <div class="cert-strip-track">
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> IT Strategy &amp; Roadmap</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Virtual CIO &amp; CISO</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> IT Risk Assessment</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Cybersecurity Protection</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Endpoint Security</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Cloud Migration &amp; Architecture</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> AWS Solutions</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Microsoft 365</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Google Workspace</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> CRM Systems</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Salesforce Migrations</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> QuickBooks Integrations</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> AI &amp; Automation</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> IT Strategy &amp; Roadmap</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Virtual CIO &amp; CISO</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> IT Risk Assessment</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Cybersecurity Protection</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Endpoint Security</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Cloud Migration &amp; Architecture</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> AWS Solutions</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Microsoft 365</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Google Workspace</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> CRM Systems</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> Salesforce Migrations</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> QuickBooks Integrations</div>
+    <div class="cert-strip-item"><span class="dot">&#9670;</span> AI &amp; Automation</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="inner">
+    <div class="about-grid">
+      <div class="about-photos fade-in">
+        <div class="about-img-frame">
+          <img src="_KIT1047b.jpg" alt="Shahar, CompSF Founder" />
+          <div class="about-img-badge"><strong>Shahar</strong> &nbsp;|&nbsp; Founder &amp; CEO</div>
+        </div>
+        <div class="about-img-frame action">
+          <img src="Shahar-Laptops.jpeg" alt="CompSF team in action" />
+        </div>
+      </div>
+      <div class="fade-in">
+        <p class="section-tag">About Us</p>
+        <h2 class="section-title">Real IT. Real People. <span>Built for Growing Businesses.</span></h2>
+        <div class="divider"></div>
+        <p style="color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:24px;">
+          At CompSF, we believe IT should support your business, not slow it down.
+        </p>
+        <p style="color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:24px;">
+          That's why we take a structured, hands-on approach. We start by understanding how your business actually runs, then assess your entire environment, identify risks, and build a clear plan to improve it.
+        </p>
+        <p style="color:var(--black);font-size:0.97rem;line-height:1.8;margin-bottom:24px;font-weight:600;">
+          No guesswork. No band-aid fixes. Just a system that works.
+        </p>
+        <p style="color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:24px;">
+          Based in the Bay Area, we work closely with our clients, on-site and remotely, to organize, secure, and maintain everything their business depends on.
+        </p>
+        <p style="color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:32px;">
+          Because when your IT is done right, you don't have to think about it at all.
+        </p>
+        <div class="expertise-chips">
+          <span class="chip">Managed IT Services</span>
+          <span class="chip">Cybersecurity</span>
+          <span class="chip">Cloud Migrations</span>
+          <span class="chip">Microsoft 365</span>
+          <span class="chip">Network Infrastructure</span>
+          <span class="chip">Firewall &amp; VPN</span>
+          <span class="chip">Endpoint Protection</span>
+          <span class="chip">Backup &amp; Recovery</span>
+          <span class="chip">QuickBooks Integration</span>
+          <span class="chip">Virtual CIO / CISO</span>
+          <span class="chip">AI &amp; Automation</span>
+        </div>
+        <div class="cert-list">
+          <div class="cert-item"><div class="cert-item-icon">🛡️</div>Cybersecurity Protection</div>
+          <div class="cert-item"><div class="cert-item-icon">☁️</div>Cloud Migration & Architecture</div>
+          <div class="cert-item"><div class="cert-item-icon">🤖</div>AI & Automation</div>
+          <div class="cert-item"><div class="cert-item-icon">💼</div>Virtual CIO / CISO</div>
+          <div class="cert-item"><div class="cert-item-icon">🔗</div>Salesforce & CRM</div>
+          <div class="cert-item"><div class="cert-item-icon">📊</div>QuickBooks Experts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="inner">
+    <div style="text-align:center;margin-bottom:56px;" class="fade-in">
+      <p class="section-tag">Special IT Projects &amp; Professional Services</p>
+      <h2 class="section-title">Project-Based <span>Expertise</span></h2>
+      <div class="divider center"></div>
+      <p class="section-desc" style="margin:0 auto;">Beyond day-to-day support, we deliver specialized IT projects on-demand. Retainer clients get a discounted hourly rate.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-in">
+        <div class="service-icon">☁️</div>
+        <h3>Cloud &amp; System Migrations</h3>
+        <ul>
+          <li>Google Workspace → Microsoft 365</li>
+          <li>M365 tenant-to-tenant consolidation</li>
+          <li>Email migration (Exchange, IMAP, Gmail)</li>
+          <li>File &amp; SharePoint data migration</li>
+          <li>CRM transitions (Salesforce, HubSpot, QB)</li>
+          <li>Cloud storage optimization</li>
+        </ul>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">⚙️</div>
+        <h3>Automation &amp; Integration</h3>
+        <ul>
+          <li>Power Automate, Zapier, Make workflows</li>
+          <li>AI-powered business process automation</li>
+          <li>Auto-ticketing with Teams &amp; Outlook</li>
+          <li>CRM, accounting &amp; HR data sync</li>
+          <li>Business process documentation &amp; mapping</li>
+        </ul>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">🌐</div>
+        <h3>Infrastructure &amp; Networking</h3>
+        <ul>
+          <li>Full network redesign &amp; implementation</li>
+          <li>Multi-site VPN &amp; VLAN segmentation</li>
+          <li>Secure remote access solutions</li>
+          <li>ISP transition &amp; load balancing</li>
+          <li>Firewall setup &amp; intrusion prevention</li>
+          <li>Cabling &amp; hardware upgrades</li>
+        </ul>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">📊</div>
+        <h3>Accounting &amp; Business Apps</h3>
+        <ul>
+          <li><strong>QuickBooks Experts</strong> — Desktop &amp; Online</li>
+          <li>QuickBooks Desktop ↔ Online migration</li>
+          <li>Advanced QB integrations (CRM, POS, inventory)</li>
+          <li>Financial data cleanup &amp; optimization</li>
+          <li>Training for accountants &amp; business owners</li>
+          <li>Salesforce &amp; monday.com integrations</li>
+        </ul>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">🔗</div>
+        <h3>Web &amp; Hosting Transitions</h3>
+        <ul>
+          <li>Domain &amp; DNS transfers</li>
+          <li>SSL setup &amp; renewal automation</li>
+          <li>SPF / DKIM / DMARC compliance</li>
+          <li>Website email routing setup</li>
+        </ul>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">🛡️</div>
+        <h3>Cybersecurity Projects</h3>
+        <ul>
+          <li>Endpoint protection rollout</li>
+          <li>Email encryption &amp; MFA deployment</li>
+          <li>Phishing simulations &amp; staff training</li>
+          <li>Vulnerability assessments</li>
+          <li>Incident response planning</li>
+          <li>Backup &amp; disaster recovery setup</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RETAINER -->
+<section id="retainer">
+  <div class="inner">
+    <div class="retainer-intro fade-in">
+      <div>
+        <p class="section-tag" style="color:var(--orange);">Managed IT Services</p>
+        <h2 class="section-title white-title">Comprehensive Monthly <span>Retainer</span></h2>
+        <div class="divider"></div>
+        <p class="retainer-desc">Our flagship offering: a fully managed, proactive IT support plan covering everything your business needs to stay secure and running smoothly. From helpdesk to virtual CIO. One monthly fee, no surprises.</p>
+      </div>
+      <div class="retainer-highlight">
+        <h4>&#128197; Ongoing Monitoring &amp; Maintenance</h4>
+        <p>User support Mon–Fri 9am–5pm via remote, email, phone, and chat. On-site visits to your HQ office when needed. Powered by our licensed MSP/RMM platform for proactive alerts, patch management, and automated reporting.</p>
+        <div style="margin-top:16px;">
+          <a href="#contact" style="background:var(--orange);color:#fff;padding:10px 22px;border-radius:6px;text-decoration:none;font-size:0.85rem;font-weight:700;">Get a Quote &#8594;</a>
+        </div>
+      </div>
+    </div>
+    <div class="retainer-grid">
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>User Support (9am–5pm, Mon–Fri)</div><div class="retainer-item-sub">Remote, email, phone, chat/text. Plus HQ office on-site visits when needed.</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Cloud Backup Monitoring</div><div class="retainer-item-sub">Monitor and verify successful backups across all systems</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Windows Updates &amp; Patch Management</div><div class="retainer-item-sub">Remote patch management and remediation via MSP/RMM. Logs monitored on all computers.</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>3rd-Party Software Updates</div><div class="retainer-item-sub">Adobe, Chrome, Bluebeam, Zoom, and more. All automated via MSP/RMM.</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Pro-Active Computer Monitoring</div><div class="retainer-item-sub">Drive space, CPU overheating, blue screen alerts. We usually know before you do.</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Cloud-Based Helpdesk Ticketing</div><div class="retainer-item-sub">Monthly monitoring, management, and end-of-month issue reports</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Remote Support System</div><div class="retainer-item-sub">Secure online remote support via TeamViewer business license</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Network Equipment Monitoring</div><div class="retainer-item-sub">Routine checkups and built-in device alerts for all network equipment</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Inventory &amp; Asset Management</div><div class="retainer-item-sub">Full IT inventory book: computers, licenses, users, warranties, and network info</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Hardware &amp; Software Lifecycle</div><div class="retainer-item-sub">Procurement support and lifecycle management across all vendors</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Business-Grade Anti-Virus</div><div class="retainer-item-sub">Gravity Zone Business Security by BitDefender. Cloud-managed from one portal.</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Secure DNS Services</div><div class="retainer-item-sub">Protects against malware and phishing through DNS-layer filtering</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Anti-Fraud Email (DKIM, DMARC)</div><div class="retainer-item-sub">Prevents email spoofing for your company domains</div></div>
+      <div class="retainer-item fade-in"><div class="retainer-item-title"><span></span>Virtual CIO / CISO</div><div class="retainer-item-sub">Quarterly IT strategy meetings covering new tech, environment improvements, and preventive planning.</div></div>
+    </div>
+    <p class="retainer-note">&#9432; Special IT projects &amp; cyber services are not included in the retainer and are billed at a discounted hourly rate for clients.</p>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="inner">
+    <div style="text-align:center;margin-bottom:52px;" class="fade-in">
+      <p class="section-tag">Our Team</p>
+      <h2 class="section-title">The <span>Specialists</span> Behind CompSF</h2>
+      <div class="divider center"></div>
+      <p class="section-desc" style="margin:0 auto;">A tight-knit crew of certified IT professionals who are good at what they do and actually care about your business. Each one brings deep expertise in their area, and together they cover everything.</p>
+    </div>
+    <div class="team-grid">
+      <!-- Founder -->
+      <div class="team-card fade-in">
+        <div class="team-photo-wrap">
+          <img src="_KIT1047b.jpg" alt="Shahar, Founder and CEO" />
+          <div class="team-brand-bar"><img src="Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Shahar</div>
+          <div class="team-role">Founder &amp; CEO</div>
+          <div class="team-skills"><span class="team-skill">CISSP</span><span class="team-skill">Virtual CIO</span><span class="team-skill">Strategy</span></div>
+        </div>
+      </div>
+      <!-- Tommy beside Shahar -->
+      <div class="team-card fade-in">
+        <div class="team-photo-wrap">
+          <img src="Tommy.jpeg" alt="Tommy Rosettie" />
+          <div class="team-brand-bar"><img src="Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Tommy Rosettie</div>
+          <div class="team-role">Helpdesk &amp; Support Lead</div>
+          <div class="team-skills"><span class="team-skill">MSP/RMM</span><span class="team-skill">Windows</span><span class="team-skill">Support</span></div>
+        </div>
+      </div>
+      <div class="team-card fade-in">
+        <div class="team-photo-wrap">
+          <img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=450&fit=crop&crop=faces&facepad=2.5&q=80" alt="Marcus Webb" />
+          <div class="team-brand-bar"><img src="Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Marcus Webb</div>
+          <div class="team-role">Senior IT Engineer</div>
+          <div class="team-skills"><span class="team-skill">CCNP</span><span class="team-skill">Networking</span><span class="team-skill">Firewall</span></div>
+        </div>
+      </div>
+      <div class="team-card fade-in">
+        <div class="team-photo-wrap">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=430&fit=crop&crop=top&q=80" alt="Sarah Chen" />
+          <div class="team-brand-bar"><img src="Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Sarah Chen</div>
+          <div class="team-role">Cloud Solutions Specialist</div>
+          <div class="team-skills"><span class="team-skill">M365</span><span class="team-skill">Azure</span><span class="team-skill">Migration</span></div>
+        </div>
+      </div>
+      <div class="team-card fade-in">
+        <div class="team-photo-wrap">
+          <img src="Avi.Gold.png" alt="Avi Gold" />
+          <div class="team-brand-bar"><img src="Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Avi Gold</div>
+          <div class="team-role">Cybersecurity &amp; Special Projects Advisor</div>
+          <div class="team-skills"><span class="team-skill">CISSP</span><span class="team-skill">Pen Testing</span><span class="team-skill">Threat Intel</span><span class="team-skill">IT Strategy</span></div>
+        </div>
+      </div>
+      <div class="team-card fade-in">
+        <div class="team-photo-wrap">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=435&fit=crop&crop=top&q=80" alt="David Kim" />
+          <div class="team-brand-bar"><img src="Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">David Kim</div>
+          <div class="team-role">Systems &amp; Automation Engineer</div>
+          <div class="team-skills"><span class="team-skill">Power Automate</span><span class="team-skill">Zapier</span><span class="team-skill">Linux</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- Team group photo -->
+    <div class="fade-in" style="text-align:center;margin-top:60px;">
+      <div style="display:inline-block;border-radius:16px;overflow:hidden;border:2px solid rgba(224,112,32,0.35);box-shadow:0 4px 12px rgba(0,0,0,0.08),0 16px 40px rgba(224,112,32,0.1);max-width:680px;width:100%;">
+        <img src="CompSF Team Pic.png" alt="The CompSF Team" style="width:100%;display:block;" />
+      </div>
+      <p style="margin-top:14px;font-size:0.82rem;color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;font-weight:600;">The CompSF Team</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="inner">
+    <div style="text-align:center;margin-bottom:52px;" class="fade-in">
+      <p class="section-tag">Why CompSF</p>
+      <h2 class="section-title">The <span>CompSF</span> Advantage</h2>
+      <div class="divider center"></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-item fade-in"><div class="why-icon">📍</div><h4>San Francisco Based</h4><p>We're local. Bay Area-based with real on-site capabilities. Not a call center. When you need someone in person, we show up.</p></div>
+      <div class="why-item fade-in"><div class="why-icon">⚡</div><h4>We Catch Issues Early</h4><p>Our MSP/RMM platform monitors your systems around the clock. Most of the time, we're already working on a fix before you even notice something's wrong.</p></div>
+      <div class="why-item fade-in"><div class="why-icon">📈</div><h4>One Team, Everything Covered</h4><p>Helpdesk, cybersecurity, cloud, virtual CIO. You don't need to juggle multiple vendors. We handle the full picture.</p></div>
+      <div class="why-item fade-in"><div class="why-icon">🔒</div><h4>Your Info Stays Private</h4><p>Full NDAs on every engagement. Your data, your infrastructure, your business details. They don't leave the room.</p></div>
+      <div class="why-item fade-in"><div class="why-icon">🏆</div><h4>Certified and Field-Tested</h4><p>CISSP, CEH, CCNP, CompTIA, Microsoft, BitDefender. Our certs aren't just on paper. They come with years of hands-on experience.</p></div>
+      <div class="why-item fade-in"><div class="why-icon">🤝</div><h4>We're In It for the Long Haul</h4><p>We're not here to close a ticket and move on. Quarterly strategy sessions, ongoing optimization, and a team that actually knows your setup.</p></div>
+      <div class="why-item fade-in"><div class="why-icon">🤖</div><h4>Smart Tools, Not Just Human Hours</h4><p>We use advanced automation and AI-powered tools to monitor, protect, and support your business faster and more accurately. Not because it's trendy — because it works.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section id="videos" style="background:var(--light-grey); padding:100px 5%;">
+  <div class="inner">
+    <div style="text-align:center;margin-bottom:52px;" class="fade-in">
+      <p class="section-tag">See Us in Action</p>
+      <h2 class="section-title">CompSF <span>in Motion</span></h2>
+      <div class="divider center"></div>
+    </div>
+    <div class="gallery-grid">
+
+      <!-- Video 1: Cinematic -->
+      <div class="fade-in">
+        <p class="gallery-video-label">A Clean Cinematic</p>
+        <div class="gallery-video-frame">
+          <video id="gv1" src="A clean, cinematic, realistic.mp4" playsinline muted preload="metadata"></video>
+          <div class="video-click-overlay" onclick="gvTogglePlay('gv1')">
+            <div class="video-click-icon" id="gv1-icon">&#9654;</div>
+          </div>
+          <div class="video-controls">
+            <button class="vc-btn" onclick="gvRewind('gv1')" title="Restart">&#8635;</button>
+            <button class="vc-btn" id="gv1-play" onclick="gvTogglePlay('gv1')">&#9654;</button>
+            <div class="vc-progress" id="gv1-bar" onclick="gvSeek(event,'gv1')">
+              <div class="vc-progress-fill" id="gv1-fill"></div>
+            </div>
+            <button class="vc-btn" id="gv1-mute" onclick="gvToggleMute('gv1')">&#128264;</button>
+            <button class="vc-btn" id="gv1-fs" onclick="gvFullscreen('gv1')">&#x26F6;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video 2: Simultaneous Laptop Setup -->
+      <div class="fade-in">
+        <p class="gallery-video-label">Simultaneous Laptop Setup</p>
+        <div class="gallery-video-frame">
+          <video id="gv2" src="Laptop Overview.mov" playsinline muted preload="metadata"></video>
+          <div class="video-click-overlay" onclick="gvTogglePlay('gv2')">
+            <div class="video-click-icon" id="gv2-icon">&#9654;</div>
+          </div>
+          <div class="video-controls">
+            <button class="vc-btn" onclick="gvRewind('gv2')" title="Restart">&#8635;</button>
+            <button class="vc-btn" id="gv2-play" onclick="gvTogglePlay('gv2')">&#9654;</button>
+            <div class="vc-progress" id="gv2-bar" onclick="gvSeek(event,'gv2')">
+              <div class="vc-progress-fill" id="gv2-fill"></div>
+            </div>
+            <button class="vc-btn" id="gv2-mute" onclick="gvToggleMute('gv2')">&#128264;</button>
+            <button class="vc-btn" id="gv2-fs" onclick="gvFullscreen('gv2')">&#x26F6;</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="inner">
+    <div class="contact-wrap">
+      <div class="fade-in">
+        <p class="section-tag">Contact Us</p>
+        <h2 class="section-title">Let's Talk About<br><span>Your IT Needs</span></h2>
+        <div class="divider"></div>
+        <p class="section-desc" style="margin-bottom:40px;">Got a tech headache? Just want to know your options? Give us a shout. We love a good conversation and the first one is always free.</p>
+        <div class="contact-info-row">
+          <div class="contact-icon">🌐</div>
+          <div><h5>Website</h5><a href="https://compsf.com" target="_blank" rel="noopener">compsf.com</a></div>
+        </div>
+        <div class="contact-info-row">
+          <div class="contact-icon">📍</div>
+          <div><h5>Where We Work</h5><p>Based in San Francisco. Serving the Bay Area and beyond.</p></div>
+        </div>
+        <div class="contact-info-row">
+          <div class="contact-icon">🕐</div>
+          <div><h5>Business Hours</h5><p>Mon–Fri 9:00am–5:00pm &nbsp;&middot;&nbsp; Critical support always on</p></div>
+        </div>
+      </div>
+      <div class="contact-form fade-in">
+        <h3>Send Us a Message</h3>
+        <form id="contactForm" onsubmit="handleSubmit(event)">
+          <input type="hidden" name="_subject" value="New inquiry from CompSF website" />
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input name="first_name" type="text" placeholder="John" required /></div>
+            <div class="form-group"><label>Last Name</label><input name="last_name" type="text" placeholder="Smith" required /></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input name="email" type="email" placeholder="john@company.com" required /></div>
+          <div class="form-group"><label>Phone Number <span style="font-weight:400;color:var(--text-muted);font-size:0.85em;">(optional)</span></label><input name="phone" type="tel" placeholder="Your phone number" /></div>
+          <div class="form-group"><label>Company Name</label><input name="company" type="text" placeholder="Your company" /></div>
+          <div class="form-group">
+            <label>Service Needed</label>
+            <select name="service">
+              <option value="">Select a service...</option>
+              <option>Monthly Managed IT Retainer</option>
+              <option>Cloud &amp; System Migration</option>
+              <option>Cybersecurity Project</option>
+              <option>Infrastructure &amp; Networking</option>
+              <option>Automation &amp; Integration</option>
+              <option>Accounting &amp; Business Apps</option>
+              <option>Web &amp; Hosting Transition</option>
+              <option>General IT Consultation</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Message</label><textarea name="message" placeholder="Tell us about your project or challenge..."></textarea></div>
+          <button type="submit" class="btn-submit" id="submitBtn">Send Message &#8594;</button>
+          <p style="text-align:center;font-size:0.78rem;color:var(--text-light);margin-top:12px;">&#128338; We respond within 1 business day</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><img src="Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF IT & Cyber Solutions" /></div>
+  <ul class="footer-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#retainer">Monthly IT</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="footer-copy">&copy; 2025 CompSF IT &amp; Cyber Solutions</div>
+</footer>
+
+<script>
+  // Always start at top on refresh — clear hash, disable smooth scroll, force top
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  function forceTop() {
+    document.documentElement.style.scrollBehavior = 'auto';
+    document.body.style.scrollBehavior = 'auto';
+    if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+    window.scrollTo(0, 0);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.style.scrollBehavior = '';
+      document.body.style.scrollBehavior = '';
+    }, 50);
+  }
+  forceTop();
+  window.addEventListener('load', forceTop);
+
+  // Back to top button
+  const backToTopBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+
+  // Mobile menu
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('mobileMenu');
+    const nav  = document.getElementById('mainNav');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !nav.contains(e.target))
+      menu.classList.remove('open');
+  });
+
+  // Nav shadow
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').style.boxShadow =
+      window.scrollY > 10 ? '0 2px 20px rgba(0,0,0,0.1)' : 'none';
+  });
+
+  // Fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 70);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Hero video controls
+  const heroVideo = document.getElementById('heroVideo');
+
+  function flashIcon(id, symbol) {
+    const icon = document.getElementById(id);
+    icon.innerHTML = symbol;
+    icon.classList.add('show');
+    setTimeout(() => icon.classList.remove('show'), 600);
+  }
+
+  function togglePlay() {
+    const btn = document.getElementById('playBtn');
+    if (heroVideo.paused) {
+      heroVideo.play();
+      btn.innerHTML = '&#10074;&#10074;';
+      flashIcon('heroClickIcon', '&#9654;');
+    } else {
+      heroVideo.pause();
+      btn.innerHTML = '&#9654;';
+      flashIcon('heroClickIcon', '&#10074;&#10074;');
+    }
+  }
+
+  function videoRewind() {
+    heroVideo.currentTime = 0;
+    heroVideo.play();
+    document.getElementById('playBtn').innerHTML = '&#10074;&#10074;';
+  }
+
+  function toggleMute() {
+    heroVideo.muted = !heroVideo.muted;
+    document.getElementById('muteBtn').innerHTML = heroVideo.muted ? '&#128264;' : '&#128266;';
+  }
+
+  function videoSeek(e) {
+    const bar = document.getElementById('vcProgress');
+    heroVideo.currentTime = (e.offsetX / bar.offsetWidth) * heroVideo.duration;
+  }
+
+  heroVideo.addEventListener('timeupdate', () => {
+    if (heroVideo.duration)
+      document.getElementById('vcFill').style.width = (heroVideo.currentTime / heroVideo.duration * 100) + '%';
+  });
+
+  heroVideo.addEventListener('ended', () => {
+    document.getElementById('playBtn').innerHTML = '&#9654;';
+  });
+
+  // Fullscreen
+  const videoFrame = heroVideo.closest('.hero-video-frame');
+  function toggleFullscreen() {
+    if (!document.fullscreenElement)
+      (videoFrame.requestFullscreen || videoFrame.webkitRequestFullscreen).call(videoFrame);
+    else
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+  document.addEventListener('fullscreenchange', () => {
+    document.getElementById('fsBtn').innerHTML = document.fullscreenElement ? '&#x2715;' : '&#x26F6;';
+  });
+  document.addEventListener('webkitfullscreenchange', () => {
+    document.getElementById('fsBtn').innerHTML = document.fullscreenElement ? '&#x2715;' : '&#x26F6;';
+  });
+
+  // Gallery video controls
+  function gvFlashIcon(id, symbol) {
+    const icon = document.getElementById(id + '-icon');
+    icon.innerHTML = symbol;
+    icon.classList.add('show');
+    setTimeout(() => icon.classList.remove('show'), 600);
+  }
+  function gvTogglePlay(id) {
+    const v = document.getElementById(id);
+    const btn = document.getElementById(id + '-play');
+    if (v.paused) {
+      v.play(); btn.innerHTML = '&#10074;&#10074;';
+      gvFlashIcon(id, '&#9654;');
+    } else {
+      v.pause(); btn.innerHTML = '&#9654;';
+      gvFlashIcon(id, '&#10074;&#10074;');
+    }
+  }
+  function gvRewind(id) {
+    const v = document.getElementById(id);
+    v.currentTime = 0; v.play();
+    document.getElementById(id + '-play').innerHTML = '&#10074;&#10074;';
+  }
+  function gvToggleMute(id) {
+    const v = document.getElementById(id);
+    v.muted = !v.muted;
+    document.getElementById(id + '-mute').innerHTML = v.muted ? '&#128264;' : '&#128266;';
+  }
+  function gvSeek(e, id) {
+    const v = document.getElementById(id);
+    const bar = document.getElementById(id + '-bar');
+    if (v.duration) v.currentTime = (e.offsetX / bar.offsetWidth) * v.duration;
+  }
+  function gvFullscreen(id) {
+    const frame = document.getElementById(id).closest('.gallery-video-frame');
+    if (!document.fullscreenElement)
+      (frame.requestFullscreen || frame.webkitRequestFullscreen).call(frame);
+    else
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+  ['gv1', 'gv2'].forEach(id => {
+    const v = document.getElementById(id);
+    v.addEventListener('timeupdate', () => {
+      if (v.duration)
+        document.getElementById(id + '-fill').style.width = (v.currentTime / v.duration * 100) + '%';
+    });
+    v.addEventListener('ended', () => {
+      document.getElementById(id + '-play').innerHTML = '&#9654;';
+    });
+  });
+
+  // Form submit
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const form = document.getElementById('contactForm');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      const res = await fetch('https://formspree.io/f/mgonbyjw', {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        window.location.href = 'thank-you.html';
+      } else {
+        btn.textContent = 'Something went wrong — try again';
+        btn.style.background = '#c0392b';
+        btn.disabled = false;
+        setTimeout(() => { btn.textContent = 'Send Message →'; btn.style.background = ''; }, 4000);
+      }
+    } catch {
+      btn.textContent = 'Network error — try again';
+      btn.style.background = '#c0392b';
+      btn.disabled = false;
+      setTimeout(() => { btn.textContent = 'Send Message →'; btn.style.background = ''; }, 4000);
+    }
+  }
+</script>
+</body>
+</html>

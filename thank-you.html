@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Received | CompSF IT & Cyber Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: 'WildanCar';
+      src: url('Wildan carFont - Adegoke.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8f8f8;
+      color: #1c1c1c;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    :root {
+      --orange:       #e07020;
+      --blood-orange: #bf3500;
+      --black:        #1c1c1c;
+      --off-white:    #f8f8f8;
+      --border:       #e0e0e0;
+      --text-muted:   #666666;
+    }
+
+    /* NAV */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+    }
+    .nav-logo img { height: 48px; width: auto; display: block; }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 5%;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 60px 52px;
+      max-width: 580px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 20px 50px rgba(224,112,32,0.07);
+      animation: fadeUp 0.55s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .check-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), var(--blood-orange));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      box-shadow: 0 6px 20px rgba(224,112,32,0.35);
+    }
+    .check-wrap svg {
+      width: 34px;
+      height: 34px;
+      stroke: #fff;
+      stroke-width: 2.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    h1 {
+      font-family: 'WildanCar', 'Inter', sans-serif;
+      font-size: 2rem;
+      color: var(--black);
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    h1 span { color: var(--orange); }
+
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--blood-orange));
+      border-radius: 3px;
+      margin: 18px auto 22px;
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: 0.97rem;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+    p strong { color: var(--black); }
+
+    .response-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff7f0;
+      border: 1px solid rgba(224,112,32,0.2);
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 0.82rem;
+      color: var(--blood-orange);
+      font-weight: 600;
+      margin: 8px 0 32px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--orange), var(--blood-orange));
+      color: #fff;
+      text-decoration: none;
+      padding: 13px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      box-shadow: 0 4px 14px rgba(191,53,0,0.3);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .btn-back:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-back:active { transform: scale(0.97); }
+    .btn-back svg {
+      width: 16px; height: 16px;
+      stroke: #fff; stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round; fill: none;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #1c1c1c;
+      padding: 24px 5%;
+      text-align: center;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 40px 28px; }
+      h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="Logo_CompSF_wTagline_Color_01_RGB.png" alt="CompSF IT & Cyber Solutions" />
+    </a>
+  </nav>
+
+  <main>
+    <div class="card">
+
+      <div class="check-wrap">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+
+      <h1>Message <span>Received</span></h1>
+      <div class="divider"></div>
+
+      <p>Thanks for reaching out. We got your message and someone from the CompSF team will be in touch shortly.</p>
+      <p><strong>No ticket numbers. No bots.</strong> A real person will review your request and get back to you.</p>
+
+      <div class="response-note">
+        🕐 &nbsp;We typically respond within 1 business day
+      </div>
+
+      <a href="index.html" class="btn-back">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to CompSF
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 CompSF IT &amp; Cyber Solutions &nbsp;&middot;&nbsp; San Francisco, CA
+  </footer>
+
+</body>
+</html>
