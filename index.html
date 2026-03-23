@@ -1298,6 +1298,8 @@
       document.getElementById('overallRating').textContent = place.rating.toFixed(1);
       document.getElementById('overallCount').textContent = place.userRatingCount + ' Google reviews';
 
+      console.log('place.reviews:', place.reviews);
+
       // Review cards
       const reviews = (place.reviews || []).slice(0, 6);
       if (!reviews.length) {
