@@ -999,12 +999,12 @@
         </div>
       </div>
     </div>
-    <div class="reviews-grid" id="reviewsGrid">
-      <div class="reviews-loading">Loading Google reviews…</div>
+    <div style="text-align:center; margin-top:8px;">
+      <a href="https://www.google.com/maps/place/?q=place_id:ChIJf9p5e2KAhYAR1gVravhN_to" target="_blank" rel="noopener" style="font-size:0.9rem; color:var(--orange); font-weight:600; text-decoration:none;">View our Google Business profile →</a>
     </div>
     <div class="reviews-cta">
-      <a href="https://g.page/r/ChIJf9p5e2KAhYAR1gVravhN_to/review" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <a href="https://search.google.com/local/writereview?placeid=ChIJf9p5e2KAhYAR1gVravhN_to" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         Leave us a Google Review
       </a>
     </div>
@@ -1292,51 +1292,12 @@
         id: 'ChIJf9p5e2KAhYAR1gVravhN_to',
         requestedLanguage: 'en'
       });
-      await place.fetchFields({ fields: ['displayName', 'rating', 'userRatingCount', 'reviews'] });
+      await place.fetchFields({ fields: ['rating', 'userRatingCount'] });
 
       // Overall rating
       document.getElementById('overallRating').textContent = place.rating.toFixed(1);
       document.getElementById('overallCount').textContent = place.userRatingCount + ' Google reviews';
-
-      console.log('place.reviews:', place.reviews);
-
-      // Review cards
-      const reviews = (place.reviews || []).slice(0, 6);
-      if (!reviews.length) {
-        document.getElementById('reviewsGrid').innerHTML = '<p class="reviews-loading">No reviews yet.</p>';
-        return;
-      }
-      document.getElementById('reviewsGrid').innerHTML = reviews.map(r => {
-        const rating = r.rating || 5;
-        const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-        const authorName = r.authorAttribution?.displayName || 'Google Reviewer';
-        const photoURI = r.authorAttribution?.photoURI;
-        const initial = authorName[0].toUpperCase();
-        const avatar = photoURI
-          ? `<img src="${photoURI}" alt="${authorName}" loading="lazy" />`
-          : initial;
-        const rawText = r.text?.text || '';
-        const text = rawText.length > 220 ? rawText.slice(0, 220).trim() + '…' : rawText;
-        const timeDesc = r.relativePublishTimeDescription || '';
-        return `
-          <div class="review-card fade-in">
-            <div class="review-top">
-              <div class="review-avatar">${avatar}</div>
-              <div>
-                <div class="review-author">${authorName}</div>
-                <div class="review-date">${timeDesc}</div>
-              </div>
-            </div>
-            <div class="review-stars">${stars}</div>
-            <p class="review-text">${text}</p>
-            <div class="review-google-badge">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              Posted on Google
-            </div>
-          </div>`;
-      }).join('');
     } catch (err) {
-      document.getElementById('reviewsGrid').innerHTML = '<p class="reviews-loading">Reviews unavailable right now.</p>';
       console.error('Reviews error:', err);
     }
   }
