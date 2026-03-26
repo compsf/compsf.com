@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1200px; height: 630px; overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      background: #0f0f0f;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    /* Radial glow accents */
+    .glow-left {
+      position: absolute; top: -100px; left: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(224,112,32,0.25) 0%, transparent 70%);
+    }
+    .glow-right {
+      position: absolute; bottom: -120px; right: -80px;
+      width: 450px; height: 450px;
+      background: radial-gradient(circle, rgba(191,53,0,0.2) 0%, transparent 70%);
+    }
+    /* Grid texture */
+    .grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    /* Orange top stripe */
+    .stripe {
+      position: absolute; top: 0; left: 0; right: 0; height: 5px;
+      background: linear-gradient(90deg, #bf3500, #e07020, #e07020, #bf3500);
+    }
+    .content {
+      position: relative; z-index: 10;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      gap: 28px;
+    }
+    .logo { height: 110px; }
+    .divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, #bf3500, #e07020);
+      border-radius: 2px;
+    }
+    .tagline {
+      font-size: 28px; font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .tagline span { color: #e07020; }
+    .sub {
+      font-size: 18px; color: rgba(255,255,255,0.45);
+      font-weight: 400; letter-spacing: 0.02em;
+    }
+    .badge {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(224,112,32,0.12);
+      border: 1px solid rgba(224,112,32,0.3);
+      border-radius: 50px;
+      padding: 8px 22px;
+      font-size: 15px; color: rgba(255,255,255,0.6);
+      letter-spacing: 0.05em;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #e07020; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="glow-left"></div>
+  <div class="glow-right"></div>
+  <div class="grid"></div>
+  <div class="stripe"></div>
+  <div class="content">
+    <img class="logo" src="Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" />
+    <div class="divider"></div>
+    <div class="tagline">Simple, Powerful <span>IT &amp; Cybersecurity</span><br>for Growing Businesses</div>
+    <div class="sub">Real people. Fast response. No jargon.</div>
+    <div class="badge"><div class="dot"></div> San Francisco Bay Area</div>
+  </div>
+</body>
+</html>
