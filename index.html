@@ -499,7 +499,7 @@
       .retainer-intro { grid-template-columns:1fr; gap:30px; }
       .contact-wrap { grid-template-columns:1fr; gap:40px; }
       .hero-inner { grid-template-columns:1fr; }
-      .hero-video-wrap { display:none; }
+      .hero-video-wrap { display:block; width:100%; max-width:100%; }
     }
     @media (max-width:660px) {
       .services-grid { grid-template-columns:1fr; }
@@ -560,7 +560,6 @@
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#retainer">Monthly IT</a></li>
-    <li><a href="#team">Team</a></li>
     <li><a href="#contact" class="nav-cta">Let's Talk &rarr;</a></li>
   </ul>
   <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
@@ -570,7 +569,6 @@
   <a href="#about"    onclick="toggleMenu()">About</a>
   <a href="#services" onclick="toggleMenu()">Services</a>
   <a href="#retainer" onclick="toggleMenu()">Monthly IT</a>
-  <a href="#team"     onclick="toggleMenu()">Team</a>
   <a href="#contact"  onclick="toggleMenu()">Contact Us</a>
 </div>
 
@@ -604,7 +602,7 @@
     <!-- Hero video -->
     <div class="hero-video-wrap">
       <div class="hero-video-frame">
-        <video id="heroVideo" src="Homepage-CompSF-Video_v2.mp4" autoplay muted playsinline loop poster="Homepage-Video-Poster.png"></video>
+        <video id="heroVideo" src="Homepage-CompSF-Video_v2.mp4" autoplay muted playsinline loop preload="auto" poster="Homepage-Video-Poster.png"></video>
         <div class="video-click-overlay" onclick="togglePlay()">
           <div class="video-click-icon" id="heroClickIcon"></div>
         </div>
@@ -833,8 +831,8 @@
   </div>
 </section>
 
-<!-- TEAM -->
-<section id="team">
+<!-- TEAM (removed) -->
+<section id="team" style="display:none;">
   <div class="inner">
     <div style="text-align:center;margin-bottom:52px;" class="fade-in">
       <p class="section-tag">Our Team</p>
@@ -913,7 +911,7 @@
       </div>
     </div>
     <!-- Team group photo -->
-    <div class="fade-in" style="text-align:center;margin-top:60px;">
+    <div class="fade-in" style="text-align:center;margin-top:60px;display:none;">
       <div style="display:inline-block;border-radius:16px;overflow:hidden;border:2px solid rgba(224,112,32,0.35);box-shadow:0 4px 12px rgba(0,0,0,0.08),0 16px 40px rgba(224,112,32,0.1);max-width:680px;width:100%;">
         <img src="CompSF Team Pic.png" alt="The CompSF Team" style="width:100%;display:block;" loading="lazy" />
       </div>
@@ -1093,7 +1091,6 @@
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#retainer">Monthly IT</a></li>
-    <li><a href="#team">Team</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="footer-copy">&copy; 2025 CompSF IT &amp; Cyber Solutions</div>
@@ -1150,6 +1147,16 @@
 
   // Hero video controls
   const heroVideo = document.getElementById('heroVideo');
+
+  // Mobile autoplay fallback: play when video enters viewport
+  const _heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && heroVideo.paused) {
+        heroVideo.play().catch(() => {});
+      }
+    });
+  }, { threshold: 0.25 });
+  _heroObserver.observe(heroVideo);
 
   function flashIcon(id, symbol) {
     const icon = document.getElementById(id);
