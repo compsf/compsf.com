@@ -1335,25 +1335,30 @@
 <script>
   async function initReviews() {
     try {
-      const { Place } = await google.maps.importLibrary('places');
-      const place = new Place({
-        id: 'ChIJf9p5e2KAhYAR1gVravhN_to',
-        requestedLanguage: 'en'
-      });
-      await place.fetchFields({ fields: ['rating', 'userRatingCount', 'reviews'] });
+      const KEY = 'AIzaSyCmqX39_2MSwPE-1j72wiV7GIprUQYJzlg';
+      const PID = 'ChIJf9p5e2KAhYAR1gVravhN_to';
+
+      // Use REST API directly — more reliable for returning full review text
+      const res  = await fetch(
+        `https://places.googleapis.com/v1/places/${PID}?languageCode=en&key=${KEY}`,
+        { headers: { 'X-Goog-FieldMask': 'rating,userRatingCount,reviews' } }
+      );
+      const data = await res.json();
 
       // Overall rating
-      document.getElementById('overallRating').textContent = place.rating.toFixed(1);
-      document.getElementById('overallCount').textContent = place.userRatingCount + ' Google reviews';
+      if (data.rating != null) {
+        document.getElementById('overallRating').textContent = data.rating.toFixed(1);
+        document.getElementById('overallCount').textContent = (data.userRatingCount || 0) + ' Google reviews';
+      }
 
       // Build slider
-      const reviews = place.reviews || [];
+      const reviews = data.reviews || [];
       if (!reviews.length) return;
 
       // Sort priority: has text + non-Hebrew first, then has text + Hebrew, then no-text last
       const hebrewRe = /[\u0590-\u05FF]/;
       function reviewScore(r) {
-        const hasText = !!(r.text?.text || '').trim();
+        const hasText = !!(r.text?.text || r.originalText?.text || '').trim();
         const isHeb   = hebrewRe.test(r.authorAttribution?.displayName || '');
         if (hasText && !isHeb) return 0;
         if (hasText &&  isHeb) return 1;
@@ -1370,14 +1375,14 @@
       const personIcon = `<svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>`;
 
       // Only render reviews that have written text
-      const textReviews = reviews.filter(r => (r.text?.text || '').trim());
+      const textReviews = reviews.filter(r => (r.text?.text || r.originalText?.text || '').trim());
 
       textReviews.forEach(r => {
         const name     = r.authorAttribution?.displayName || 'Google User';
-        const photo    = r.authorAttribution?.photoURI;
+        const photo    = r.authorAttribution?.photoUri;           // REST uses lowercase i
         const rating   = r.rating || 5;
         const stars    = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-        const text     = r.text.text;
+        const text     = r.text?.text || r.originalText?.text || '';
         const date     = r.relativePublishTimeDescription || '';
         const isHeb    = hebrewRe.test(name);
         const initial  = name.charAt(0).toUpperCase();
@@ -1455,6 +1460,9 @@
       console.error('Reviews error:', err);
     }
   }
+
+  // Trigger on load — no longer depends on Maps JS library callback
+  document.addEventListener('DOMContentLoaded', initReviews);
 </script>
 </body>
 </html>
