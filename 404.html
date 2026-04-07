@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting… | CompSF</title>
+  <script>
+    // Map old URL paths to the correct section on compsf.com
+    const redirects = {
+      '/what-we-do':   'https://compsf.com/#services',
+      '/what-we-do/':  'https://compsf.com/#services',
+      '/about-us':     'https://compsf.com/#about',
+      '/about-us/':    'https://compsf.com/#about',
+      '/contact-us':   'https://compsf.com/#contact',
+      '/contact-us/':  'https://compsf.com/#contact',
+      '/services':     'https://compsf.com/#services',
+      '/services/':    'https://compsf.com/#services',
+      '/about':        'https://compsf.com/#about',
+      '/contact':      'https://compsf.com/#contact',
+    };
+
+    const path = window.location.pathname;
+    const dest = redirects[path] || 'https://compsf.com';
+    window.location.replace(dest);
+  </script>
+  <meta http-equiv="refresh" content="0;url=https://compsf.com">
+</head>
+<body style="font-family:Arial,sans-serif;text-align:center;padding:80px 20px;background:#f5f5f5;">
+  <img src="https://compsf.com/Logo_CompSF_wTagline_Color_01_RGB.png" width="180" alt="CompSF" style="margin-bottom:24px;display:block;margin:0 auto 24px;" />
+  <p style="color:#666;font-size:1rem;">Redirecting you to the right page…</p>
+  <p style="color:#aaa;font-size:0.85rem;">
+    If you are not redirected automatically, <a href="https://compsf.com" style="color:#E07020;">click here</a>.
+  </p>
+</body>
+</html>
