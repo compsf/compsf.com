@@ -621,7 +621,7 @@
     <!-- Hero video -->
     <div class="hero-video-wrap">
       <div class="hero-video-frame">
-        <video id="heroVideo" src="Homepage-CompSF-Video_v2.mp4" autoplay muted playsinline loop preload="auto" poster="Homepage-Video-Poster.png"></video>
+        <video id="heroVideo" src="Homepage-CompSF-Video_v2.mp4" muted playsinline loop preload="auto" poster="Homepage-Video-Poster.png"></video>
         <div class="video-click-overlay" onclick="togglePlay()">
           <div class="video-click-icon" id="heroClickIcon"></div>
         </div>
@@ -1177,12 +1177,19 @@
   // Hero video controls
   const heroVideo = document.getElementById('heroVideo');
 
-  // Mobile autoplay fallback: play when video enters viewport
+  // Start video after 2s delay (shows poster/logo during wait)
+  let _videoStarted = false;
+  function _startHeroVideo() {
+    if (_videoStarted) return;
+    _videoStarted = true;
+    setTimeout(() => heroVideo.play().catch(() => {}), 2000);
+  }
+  _startHeroVideo();
+
+  // Mobile fallback: play when video scrolls into view (also respects 2s delay)
   const _heroObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting && heroVideo.paused) {
-        heroVideo.play().catch(() => {});
-      }
+      if (entry.isIntersecting) _startHeroVideo();
     });
   }, { threshold: 0.25 });
   _heroObserver.observe(heroVideo);
@@ -1214,8 +1221,14 @@
   }
 
   function toggleMute() {
-    heroVideo.muted = !heroVideo.muted;
+    const wasMuted = heroVideo.muted;
+    heroVideo.muted = !wasMuted;
     document.getElementById('muteBtn').innerHTML = heroVideo.muted ? '&#128264;' : '&#128266;';
+    // Restart from beginning when unmuting
+    if (wasMuted) {
+      heroVideo.currentTime = 0;
+      heroVideo.play().catch(() => {});
+    }
   }
 
   function videoSeek(e) {
