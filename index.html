@@ -1126,21 +1126,20 @@
 </footer>
 
 <script>
-  // Always start at top on refresh — clear hash, disable smooth scroll, force top
+  // On load: scroll to top, or smoothly scroll to hash section if present
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  function forceTop() {
-    document.documentElement.style.scrollBehavior = 'auto';
-    document.body.style.scrollBehavior = 'auto';
-    if (window.location.hash) history.replaceState(null, '', window.location.pathname);
-    window.scrollTo(0, 0);
-    setTimeout(() => {
+  window.scrollTo(0, 0);
+  window.addEventListener('load', () => {
+    const hash = window.location.hash;
+    if (hash) {
+      setTimeout(() => {
+        const el = document.querySelector(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 600);
+    } else {
       window.scrollTo(0, 0);
-      document.documentElement.style.scrollBehavior = '';
-      document.body.style.scrollBehavior = '';
-    }, 50);
-  }
-  forceTop();
-  window.addEventListener('load', forceTop);
+    }
+  });
 
   // Back to top button
   const backToTopBtn = document.getElementById('backToTop');
