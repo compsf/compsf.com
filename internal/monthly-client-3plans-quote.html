@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompSF — Quote Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: #0e0e0e;
+    color: #e8e2d9;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* — Top bar — */
+  .topbar {
+    background: #141414;
+    border-bottom: 1px solid #2a2a2a;
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-logo {
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .topbar-logo span { color: #C0392B; }
+  .topbar-tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #666;
+    border-left: 1px solid #333;
+    padding-left: 16px;
+  }
+  .topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-generate {
+    background: #C0392B;
+    color: #fff;
+    border: none;
+    padding: 9px 22px;
+    font-family: 'Georgia', serif;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.15s;
+  }
+  .btn-generate:hover { background: #a93226; }
+  .btn-generate:active { transform: scale(0.98); }
+
+  /* — Layout — */
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: calc(100vh - 57px);
+  }
+
+  /* — Sidebar nav — */
+  .sidebar {
+    background: #111;
+    border-right: 1px solid #222;
+    padding: 32px 0;
+    position: sticky;
+    top: 57px;
+    height: calc(100vh - 57px);
+    overflow-y: auto;
+  }
+  .nav-section {
+    padding: 6px 24px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #444;
+    margin-top: 20px;
+  }
+  .nav-section:first-child { margin-top: 0; }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    font-size: 13px;
+    color: #999;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.12s;
+    text-decoration: none;
+  }
+  .nav-item:hover { color: #e8e2d9; background: #1a1a1a; }
+  .nav-item.active { color: #e8e2d9; border-left-color: #C0392B; background: #1a1a1a; }
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #333;
+    flex-shrink: 0;
+  }
+  .nav-item.active .nav-dot { background: #C0392B; }
+
+  /* — Main content — */
+  .main {
+    padding: 40px 60px;
+    max-width: 820px;
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 40px;
+  }
+
+  /* — Form sections — */
+  .form-section {
+    margin-bottom: 48px;
+    scroll-margin-top: 80px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #222;
+  }
+  .section-num {
+    font-size: 11px;
+    color: #C0392B;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+  }
+  .section-name {
+    font-size: 15px;
+    color: #e8e2d9;
+    letter-spacing: 0.01em;
+  }
+
+  .field-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .field-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .field-grid.cols-1 { grid-template-columns: 1fr; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .field label {
+    font-size: 11px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #888;
+  }
+  .field label .req { color: #C0392B; margin-left: 2px; }
+
+  input[type="text"],
+  input[type="date"],
+  select,
+  textarea {
+    background: #1a1a1a;
+    border: 1px solid #2e2e2e;
+    color: #e8e2d9;
+    padding: 10px 13px;
+    font-size: 13px;
+    font-family: 'Georgia', serif;
+    border-radius: 3px;
+    outline: none;
+    transition: border-color 0.12s;
+    width: 100%;
+  }
+  input[type="text"]:focus,
+  input[type="date"]:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #C0392B;
+    background: #1e1515;
+  }
+  input::placeholder,
+  textarea::placeholder { color: #444; }
+  select option { background: #1a1a1a; }
+
+  textarea { min-height: 72px; resize: vertical; }
+
+  /* Checkbox */
+  .checkbox-set {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+  }
+  .checkbox-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: #C0392B;
+    cursor: pointer;
+  }
+  .checkbox-item span {
+    font-size: 13px;
+    color: #aaa;
+  }
+
+  /* Env grid */
+  .env-table {
+    border: 1px solid #222;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .env-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr;
+    border-bottom: 1px solid #222;
+  }
+  .env-row:last-child { border-bottom: none; }
+  .env-row-num {
+    background: #161616;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #444;
+    font-family: 'Courier New', monospace;
+    border-right: 1px solid #222;
+  }
+  .env-row input {
+    border: none;
+    border-radius: 0;
+    background: #151515;
+    border-right: 1px solid #222;
+  }
+  .env-row input:last-child { border-right: none; }
+  .env-row input:focus { background: #1e1515; }
+
+  /* Preview card */
+  .preview-card {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-top: 40px;
+  }
+  .preview-title {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 14px;
+  }
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 24px;
+  }
+  .preview-row {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    padding: 4px 0;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .preview-key { color: #555; min-width: 90px; flex-shrink: 0; }
+  .preview-val { color: #aaa; }
+  .preview-val.filled { color: #e8e2d9; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #1a1a1a;
+    border: 1px solid #C0392B;
+    color: #e8e2d9;
+    padding: 12px 20px;
+    font-size: 13px;
+    border-radius: 3px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.2s;
+    pointer-events: none;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">Comp<span>SF</span></div>
+  <div class="topbar-tag">Quote Generator</div>
+  <div class="topbar-right">
+    <button class="btn-generate" onclick="generatePDF()">⬇ Generate & Save PDF</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- Sidebar nav -->
+  <nav class="sidebar">
+    <div class="nav-section">Sections</div>
+    <a class="nav-item active" href="#quote-details" onclick="setActive(this)">
+      <span class="nav-dot"></span> Quote details
+    </a>
+    <a class="nav-item" href="#client-info" onclick="setActive(this)">
+      <span class="nav-dot"></span> Client information
+    </a>
+    <a class="nav-item" href="#tech-stack" onclick="setActive(this)">
+      <span class="nav-dot"></span> Technology stack
+    </a>
+    <a class="nav-item" href="#environment" onclick="setActive(this)">
+      <span class="nav-dot"></span> Environment snapshot
+    </a>
+    <div class="nav-section">Output</div>
+    <a class="nav-item" href="#preview" onclick="setActive(this)">
+      <span class="nav-dot"></span> Preview
+    </a>
+  </nav>
+
+  <!-- Main form -->
+  <main class="main">
+    <h1 class="page-title">New client quote</h1>
+    <p class="page-sub">Fill in the fields below and click Generate to download a branded PDF proposal.</p>
+
+    <!-- 01 Quote details -->
+    <section class="form-section" id="quote-details">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <span class="section-name">Quote details</span>
+      </div>
+      <div class="field-grid cols-3">
+        <div class="field">
+          <label>Date <span class="req">*</span></label>
+          <input type="date" id="f_date">
+        </div>
+        <div class="field">
+          <label>Valid until <span class="req">*</span></label>
+          <input type="date" id="f_valid">
+        </div>
+        <div class="field">
+          <label>Quote # <span class="req">*</span></label>
+          <input type="text" id="f_qnum" placeholder="CSF-202506-001">
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 Client information -->
+    <section class="form-section" id="client-info">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <span class="section-name">Client information</span>
+      </div>
+      <div class="field-grid cols-1" style="margin-bottom:16px;">
+        <div class="field">
+          <label>Organization name <span class="req">*</span></label>
+          <input type="text" id="f_org" placeholder="e.g. Acme Corporation" oninput="updatePreview()">
+        </div>
+      </div>
+      <div class="field-grid cols-1" style="margin-bottom:16px;">
+        <div class="field">
+          <label>Organization sub-name / division</label>
+          <input type="text" id="f_sub" placeholder="e.g. of San Francisco — leave blank if none" oninput="updatePreview()">
+        </div>
+      </div>
+      <div class="field-grid cols-2">
+        <div class="field">
+          <label>Contact person <span class="req">*</span></label>
+          <input type="text" id="f_contact" placeholder="Full name" oninput="updatePreview()">
+        </div>
+        <div class="field">
+          <label>Industry / Sector <span class="req">*</span></label>
+          <input type="text" id="f_industry" placeholder="e.g. Nonprofit, Healthcare, Tech" oninput="updatePreview()">
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Technology stack -->
+    <section class="form-section" id="tech-stack">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <span class="section-name">Technology stack</span>
+      </div>
+      <div class="field-grid cols-2" style="margin-bottom:16px;">
+        <div class="field">
+          <label>CRM Platform</label>
+          <input type="text" id="f_crm" placeholder="e.g. Salesforce, HighLevel, HubSpot" oninput="updatePreview()">
+        </div>
+        <div class="field">
+          <label>Cloud platforms</label>
+          <input type="text" id="f_platforms" placeholder="e.g. Google Workspace · Microsoft 365" oninput="updatePreview()">
+        </div>
+      </div>
+      <div class="field-grid cols-2" style="margin-bottom:16px;">
+        <div class="field">
+          <label>Anti-Virus / Endpoint security</label>
+          <input type="text" id="f_antivirus" placeholder="e.g. BitDefender GravityZone">
+        </div>
+        <div class="field">
+          <label>Other SaaS subscriptions</label>
+          <input type="text" id="f_saas" placeholder="e.g. Slack, Zoom, QuickBooks">
+        </div>
+      </div>
+      <div class="field-grid cols-1">
+        <div class="field">
+          <label>On-Premise server</label>
+          <div class="checkbox-set" style="margin-top:8px;">
+            <label class="checkbox-item">
+              <input type="checkbox" id="f_server_yes" onchange="document.getElementById('f_server_no').checked=false">
+              <span>Yes — has on-premise server(s)</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" id="f_server_no" onchange="document.getElementById('f_server_yes').checked=false">
+              <span>No — fully cloud-based</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 Environment snapshot -->
+    <section class="form-section" id="environment">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <span class="section-name">Environment snapshot</span>
+      </div>
+      <p style="font-size:12px;color:#555;margin-bottom:14px;">4 rows — each shows two items side by side in the document</p>
+      <div class="env-table">
+        <div class="env-row">
+          <div class="env-row-num">1</div>
+          <input type="text" id="e_a1" placeholder="e.g. 10 Devices">
+          <input type="text" id="e_b1" placeholder="e.g. 7 Users">
+        </div>
+        <div class="env-row">
+          <div class="env-row-num">2</div>
+          <input type="text" id="e_a2" placeholder="e.g. 2 Desktops">
+          <input type="text" id="e_b2" placeholder="e.g. 8 Laptops">
+        </div>
+        <div class="env-row">
+          <div class="env-row-num">3</div>
+          <input type="text" id="e_a3" placeholder="e.g. ~40 Mailboxes">
+          <input type="text" id="e_b3" placeholder="e.g. Google Workspace">
+        </div>
+        <div class="env-row">
+          <div class="env-row-num">4</div>
+          <input type="text" id="e_a4" placeholder="e.g. Microsoft 365">
+          <input type="text" id="e_b4" placeholder="e.g. HighLevel CRM">
+        </div>
+      </div>
+    </section>
+
+    <!-- Preview -->
+    <section class="form-section" id="preview">
+      <div class="section-header">
+        <span class="section-num">✦</span>
+        <span class="section-name">Preview before generating</span>
+      </div>
+      <div class="preview-card">
+        <div class="preview-title">Will appear in PDF as</div>
+        <div class="preview-grid">
+          <div><div class="preview-row"><span class="preview-key">Organization</span><span class="preview-val" id="pv_org">—</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Contact</span><span class="preview-val" id="pv_contact">—</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Industry</span><span class="preview-val" id="pv_industry">—</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">CRM</span><span class="preview-val" id="pv_crm">—</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Platforms</span><span class="preview-val" id="pv_platforms">—</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Quote #</span><span class="preview-val" id="pv_qnum">—</span></div></div>
+        </div>
+      </div>
+      <div style="margin-top:24px;text-align:center;">
+        <button class="btn-generate" style="padding:13px 40px;font-size:15px;" onclick="generatePDF()">⬇ Generate & Save PDF</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// — Defaults —
+const today = new Date();
+const pad   = n => String(n).padStart(2,'0');
+const ymd   = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const pretty= d => { const months=['January','February','March','April','May','June','July','August','September','October','November','December']; return `${months[d.getMonth()]} ${pad(d.getDate())}, ${d.getFullYear()}`; };
+
+document.getElementById('f_date').value  = ymd(today);
+const vd = new Date(today); vd.setDate(today.getDate()+30);
+document.getElementById('f_valid').value = ymd(vd);
+document.getElementById('f_qnum').value  = `CSF-${today.getFullYear()}${pad(today.getMonth()+1)}-001`;
+
+function g(id){ return document.getElementById(id).value.trim(); }
+
+function setActive(el){ document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
+
+function updatePreview(){
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    el.textContent = val || '—';
+    el.className = 'preview-val' + (val ? ' filled' : '');
+  };
+  const org = g('f_org') + (g('f_sub') ? ' '+g('f_sub') : '');
+  set('pv_org',       org);
+  set('pv_contact',   g('f_contact'));
+  set('pv_industry',  g('f_industry'));
+  set('pv_crm',       g('f_crm'));
+  set('pv_platforms', g('f_platforms'));
+  set('pv_qnum',      g('f_qnum'));
+}
+
+function showToast(msg, duration=2800){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), duration);
+}
+
+// — PDF GENERATION —
+function generatePDF(){
+  const org      = g('f_org');
+  const contact  = g('f_contact');
+  const industry = g('f_industry');
+
+  if(!org || !contact || !industry){
+    showToast('Please fill in Organization, Contact, and Industry');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'pt', format:'letter' });
+
+  const PW = 612, PH = 792;
+  const ML = 36, MR = 36, MT = 36, MB = 36;
+  const CW = PW - ML - MR;
+
+  // Colors
+  const ORANGE  = [192,57,43];
+  const OR_DK   = [140,26,14];
+  const OR_LITE = [253,245,244];
+  const WHITE   = [255,255,255];
+  const CARD    = [244,244,244];
+  const CARD2   = [235,235,235];
+  const G1      = [26,26,26];
+  const G2      = [60,60,60];
+  const G3      = [106,106,106];
+  const G4      = [154,154,154];
+  const DIV     = [222,222,222];
+  const GREEN   = [26,107,56];
+  const CROSS   = [187,187,187];
+  const BLUE    = [26,82,122];
+
+  function setFill(c){ doc.setFillColor(c[0],c[1],c[2]); }
+  function setStroke(c){ doc.setDrawColor(c[0],c[1],c[2]); }
+  function setTextColor(c){ doc.setTextColor(c[0],c[1],c[2]); }
+
+  function box(x,y,w,h,fill){
+    setFill(fill); doc.setLineWidth(0);
+    setStroke(fill);
+    doc.rect(x,y,w,h,'F');
+  }
+
+  function hline(x,y,w,color,lw=0.5){
+    setStroke(color); doc.setLineWidth(lw);
+    doc.line(x,y,x+w,y);
+  }
+
+  function txt(x, y, s, opts={}){
+    if(!s && s!==0) return 0;
+    const { size=9, color=G2, font='Helvetica', bold=false, align='left', maxw=null } = opts;
+    doc.setFont(font, bold ? 'bold' : 'normal');
+    doc.setFontSize(size);
+    setTextColor(color);
+    if(maxw && doc.getTextWidth(s) > maxw){
+      while(doc.getTextWidth(s) > maxw && s.length > 3) s = s.slice(0,-4)+'...';
+    }
+    if(align==='center') doc.text(s, x, y, {align:'center'});
+    else if(align==='right') doc.text(s, x, y, {align:'right'});
+    else doc.text(s, x, y);
+    return doc.getTextWidth(s);
+  }
+
+  function wrapText(x, y, s, opts={}){
+    const { size=9, color=G2, maxw=200, lh=13 } = opts;
+    doc.setFont('Helvetica','normal'); doc.setFontSize(size); setTextColor(color);
+    const lines = doc.splitTextToSize(s, maxw);
+    lines.forEach(line => { doc.text(line, x, y); y += lh; });
+    return y;
+  }
+
+  // Data
+  const qdate   = g('f_date') ? new Date(g('f_date')+'T12:00:00') : today;
+  const vdate   = g('f_valid') ? new Date(g('f_valid')+'T12:00:00') : vd;
+  const qnum    = g('f_qnum') || `CSF-${today.getFullYear()}${pad(today.getMonth()+1)}-001`;
+  const orgSub  = g('f_sub');
+  const fullOrg = org + (orgSub ? ' '+orgSub : '');
+  const crm     = g('f_crm') || 'Not specified';
+  const platforms = g('f_platforms') || 'Not specified';
+  const antivirus = g('f_antivirus') || 'BitDefender GravityZone';
+  const saas    = g('f_saas') || '';
+  const serverY = document.getElementById('f_server_yes').checked;
+  const serverN = document.getElementById('f_server_no').checked;
+  const serverStr = serverY ? 'Yes - on-premise server(s)' : serverN ? 'No - fully cloud-based' : '';
+
+  const env = [
+    [g('e_a1')||'__ Devices',    g('e_b1')||'__ Users'],
+    [g('e_a2')||'__ Desktops',   g('e_b2')||'__ Laptops'],
+    [g('e_a3')||'__ Mailboxes',  g('e_b3')||'Platform'],
+    [g('e_a4')||'Platform',      g('e_b4')||'Platform'],
+  ];
+
+  // Plan data
+  const BASIC_FEATURES = [
+    'Cloud Backup Monitoring',
+    'Ongoing Windows Updates & Patch Management',
+    '3rd Party Software Updates',
+    'Remote Computer Monitoring System (RMM)',
+    'Cloud-Based Ticketing System (Helpdesk)',
+    'Network Lifecycle Management',
+    'Inventory Management',
+    'Cloud Resources Monitoring',
+    'Software & Hardware Recommendations',
+    `Business Grade Anti-Virus (${antivirus})`,
+  ];
+
+  const ADVANCED_EXTRAS = [
+    'Unlimited User Support (9am-5pm, Mon-Fri)',
+    'Day-to-Day Troubleshooting for all users',
+    'Proactive Monitoring & Optimization',
+    'Ongoing Improvements & Strategic Guidance',
+    'Onboarding & Initial Cleanup - INCLUDED!',
+  ];
+
+  const PLANS = [
+    {
+      num:'OPTION 1', title:'Break / Fix - On-Demand',
+      tagline:'Best for: Minimal commitment - pay only when something breaks',
+      features:['Remote troubleshooting & issue resolution','Hardware & software diagnosis','Email & cloud account support','Vendor coordination'],
+      cross:['No ongoing monitoring or maintenance','No proactive updates or patching','No helpdesk or dedicated user support'],
+      extraLabel:'', extra:[],
+      price:'$180', unit:'/ hour',
+      rows:[['Hourly Rate','$180/hr',ORANGE],['Onboarding & Cleanup','$5,000',ORANGE],['Monthly Commitment','None',GREEN]],
+      footnote:'No contract - call us when you need us',
+      note:'User support & projects billed at $180/hr',
+      bg: WHITE,
+    },
+    {
+      num:'OPTION 2', title:'Basic Support Plan - On-Going IT Services',
+      tagline:'Best for: Essential monitoring & maintenance without full user support',
+      features: BASIC_FEATURES,
+      cross:['User Support - billed at $180/hour','Special Projects - billed at $180/hour'],
+      extraLabel:'', extra:[],
+      price:'$150', unit:'/ user / month',
+      rows:[['Est. Monthly (7 users)','$1,050/mo',G1],['Onboarding & Cleanup','$2,000',ORANGE],['User Support Rate','$180/hr',G3]],
+      footnote:'7 users x $150/month',
+      note:null,
+      bg: CARD,
+    },
+    {
+      num:'OPTION 3', title:'Advanced Support - All-Inclusive',
+      tagline:'★ RECOMMENDED · Full support, predictable cost, zero internal IT burden',
+      features: BASIC_FEATURES,
+      cross:[],
+      extraLabel:'ALSO INCLUDED',
+      extra: ADVANCED_EXTRAS,
+      price:'$250', unit:'/ user / month',
+      rows:[['Est. Monthly (7 users)','$1,750/mo',ORANGE],['Onboarding & Cleanup','INCLUDED',GREEN],['Special Projects','$180/hr',BLUE]],
+      footnote:'Special projects not included - billed at $180/hr',
+      note:'Special projects - not included in monthly plan',
+      bg: OR_LITE,
+    },
+  ];
+
+  const CMP_DATA = [
+    ['Monitoring & Patch Management', '-','✓','✓'],
+    ['Business Grade Anti-Virus',     '-','✓','✓'],
+    ['Cloud Backup Monitoring',       '-','✓','✓'],
+    ['Helpdesk / Ticketing System',   '-','✓','✓'],
+    ['Inventory & Asset Management',  '-','✓','✓'],
+    ['Network Lifecycle Management',  '-','✓','✓'],
+    ['User Support (Mon-Fri)',        '-','$180/hr','✓ Unlimited'],
+    ['Day-to-Day Troubleshooting',    '-','-','✓'],
+    ['Proactive Optimization',        '-','-','✓'],
+    ['Onboarding & Cleanup',          '$5,000','$2,000','INCLUDED'],
+    ['Est. Monthly Cost',             '$180/hr','$1,050/mo','$1,750/mo'],
+  ];
+
+  const TERMS = [
+    ['Contract Term',      '12-month agreement recommended. Month-to-month available at standard rate.'],
+    ['Payment',            'Monthly invoicing via ACH or credit card. Onboarding fee due at project kickoff.'],
+    ['3rd-Party Licenses', '3rd-party platforms (Google Workspace, Microsoft 365, CRM, and other SaaS tools) are billed separately by their vendors. CompSF manages but does not resell these licenses.'],
+    ['Scope Changes',      'Additional devices or users prorated. Special projects billed at $180/hr (CRM migration, cloud setup, office relocation, data recovery, security breach response).'],
+    ['Quote Validity',     `Valid for 30 days - through ${pretty(vdate)}.`],
+  ];
+
+  const SP_PROJECTS = [
+    ['1. Network, Infrastructure & Cabling','Any redesign, replacement, or major upgrade of your network - including firewalls, switches, Wi-Fi systems, structured cabling, telephony, or office relocations.'],
+    ['2. Cloud Migrations & Major Data Moves','Moving email, files, or systems between platforms - including Microsoft 365, Google Workspace, SharePoint, or server-to-cloud migrations.'],
+    ['3. Cybersecurity Upgrades & Compliance','Implementation of advanced security measures such as MFA rollout, conditional access policies, or compliance work.'],
+    ['4. Backup & Disaster Recovery Setup','Designing and implementing backup systems, offsite replication, disaster recovery planning, and testing.'],
+    ['5. Business Software Implementation','Setup or integration of business applications such as accounting systems, CRMs, ERPs, or workflow automation tools.'],
+  ];
+
+  // — DRAW FUNCTIONS —
+  let currentPage = 1;
+
+  function footer(pageNum){
+    const fy = PH - MB + 4;
+    hline(ML, fy - 10, CW, DIV, 0.4);
+    const parts = [
+      {s:'CompSF IT & Cyber Security Solutions  ·  ', bold:false, color:G4},
+      {s:'compsf.com', bold:false, color:BLUE, url:'https://compsf.com'},
+      {s:'  ·  ', bold:false, color:G4},
+      {s:'service@compsf.com', bold:false, color:BLUE, url:'mailto:service@compsf.com'},
+      {s:'  ·  ', bold:false, color:G4},
+      {s:'415-864-6168', bold:false, color:BLUE, url:'tel:+14158646168'},
+      {s:'  ·  Page ', bold:false, color:G4},
+      {s:String(pageNum), bold:true, color:G4},
+    ];
+    doc.setFontSize(7.5);
+    let totalW = parts.reduce((acc,p)=>{
+      doc.setFont('Helvetica', p.bold?'bold':'normal');
+      return acc + doc.getTextWidth(p.s);
+    },0);
+    let cx = ML + CW/2 - totalW/2;
+    parts.forEach(p=>{
+      doc.setFont('Helvetica', p.bold?'bold':'normal');
+      setTextColor(p.color);
+      const w = doc.getTextWidth(p.s);
+      doc.text(p.s, cx, fy);
+      if(p.url) doc.link(cx, fy-8, w, 10, {url: p.url});
+      cx += w;
+    });
+  }
+
+  function newPage(){
+    doc.addPage();
+    currentPage++;
+  }
+
+  function checkPage(y, needed){
+    if(y - needed < MB + 20){ newPage(); return MT; }
+    return y;
+  }
+
+  function sectionLabel(x, y, num, title, breakBefore=false){
+    if(breakBefore){ newPage(); y = MT; }
+    box(x, y-14, 3, 17, ORANGE);
+    doc.setFont('Helvetica','bold'); doc.setFontSize(13); setTextColor(ORANGE);
+    if(num){ const nw = doc.getTextWidth(num+'  '); doc.text(num+'  ', x+8, y); setTextColor(G1); doc.text(title, x+8+nw, y); }
+    else { setTextColor(G1); doc.text(title, x+8, y); }
+    return y + 18;
+  }
+
+  function drawChecklist(x, y, items, cross=false){
+    const mark = cross ? '✗' : '✓';
+    const col  = cross ? CROSS : GREEN;
+    const tcol = cross ? G3 : G2;
+    const avail = CW * 0.60 - 24;
+    items.forEach(item => {
+      doc.setFont('Helvetica','normal'); doc.setFontSize(9.5); setTextColor(col);
+      doc.text(mark, x, y);
+      setTextColor(tcol);
+      const lines = doc.splitTextToSize(item, avail);
+      lines.forEach((ln,i) => { doc.text(ln, x+12, y + i*(13)); });
+      y += lines.length * 13;
+    });
+    return y;
+  }
+
+  function drawPlan(y, plan){
+    const FW = CW * 0.60;
+    const PW2 = CW * 0.40;
+    const HDR_H = 48;
+    const ROW_H = 17;
+
+    // Header bar
+    box(ML, y, CW, 4, OR_DK);
+    box(ML, y+4, CW, HDR_H-4, ORANGE);
+    doc.setFont('Helvetica','bold'); doc.setFontSize(16); setTextColor(WHITE);
+    doc.text(plan.num+'  '+plan.title, ML+14, y+22);
+    doc.setFont('Helvetica','italic'); doc.setFontSize(9); setTextColor([238,200,196]);
+    doc.text(plan.tagline, ML+14, y+38);
+    y += HDR_H;
+
+    // Estimate body height
+    const totalItems = plan.features.length + plan.cross.length + plan.extra.length;
+    const extraLabels = (plan.cross.length?1:0) + (plan.extra.length?1:0) + (plan.note?1:0);
+    const featH = 20 + totalItems*13 + extraLabels*20 + 24;
+    const priceH = 14 + 30 + 14 + plan.rows.length*ROW_H + 24;
+    const bodyH = Math.max(featH, priceH) + 12;
+
+    box(ML, y, CW, bodyH, plan.bg);
+    hline(ML+FW, y, 0, DIV, 0.5); doc.line(ML+FW, y, ML+FW, y+bodyH);
+
+    // Left: features
+    let fy = y + 14;
+    doc.setFont('Helvetica','bold'); doc.setFontSize(10); setTextColor(ORANGE);
+    doc.text("WHAT'S INCLUDED", ML+12, fy); fy += 16;
+    fy = drawChecklist(ML+12, fy, plan.features);
+    if(plan.cross.length){ fy += 7; fy = drawChecklist(ML+12, fy, plan.cross, true); }
+    if(plan.extra.length){
+      fy += 10;
+      doc.setFont('Helvetica','bold'); doc.setFontSize(10); setTextColor(ORANGE);
+      doc.text(plan.extraLabel, ML+12, fy); fy += 14;
+      fy = drawChecklist(ML+12, fy, plan.extra);
+    }
+    if(plan.note){
+      fy += 8;
+      fy = drawChecklist(ML+12, fy, [plan.note], true);
+    }
+
+    // Right: pricing
+    const px = ML + FW + 10;
+    const pw = PW2 - 18;
+    let ry = y + 12;
+    doc.setFont('Helvetica','bold'); doc.setFontSize(10); setTextColor(ORANGE);
+    doc.text('PRICING', px + pw/2, ry, {align:'center'}); ry += 14;
+    doc.setFont('Helvetica','bold'); doc.setFontSize(28); setTextColor(ORANGE);
+    doc.text(plan.price, px + pw/2, ry+18, {align:'center'}); ry += 30;
+    doc.setFont('Helvetica','normal'); doc.setFontSize(8.5); setTextColor(G3);
+    doc.text(plan.unit, px + pw/2, ry, {align:'center'}); ry += 14;
+
+    // Price rows (all bgs first, then text)
+    plan.rows.forEach((r,i)=>{ const bg = i%2===0?CARD2:CARD; box(px, ry, pw, ROW_H, bg); ry += ROW_H; });
+    ry -= plan.rows.length * ROW_H;
+    plan.rows.forEach(([lbl,val,vc],i)=>{
+      const ty = ry + ROW_H - 5;
+      doc.setFont('Helvetica','normal'); doc.setFontSize(8.5); setTextColor(G2);
+      doc.text(lbl, px+7, ty);
+      doc.setFont('Helvetica','bold'); setTextColor(vc);
+      doc.text(val, px+pw-7, ty, {align:'right'});
+      ry += ROW_H;
+    });
+    doc.setFont('Helvetica','italic'); doc.setFontSize(8); setTextColor(BLUE);
+    doc.text(plan.footnote, px+pw/2, ry+10, {align:'center'});
+
+    return y + bodyH;
+  }
+
+  // PAGE 1 — Header + Client + Plan 1
+  let y = MT;
+
+  // Header
+  doc.setFont('Helvetica','bold'); doc.setFontSize(22); setTextColor(ORANGE);
+  doc.text('IT & Cybersecurity Proposal', ML, y+20);
+  doc.setFont('Helvetica','normal'); doc.setFontSize(9); setTextColor(G3);
+  doc.text(`Date:  ${pretty(qdate)}`, ML, y+40);
+  doc.text(`Valid until:  ${pretty(vdate)}`, ML, y+52);
+  doc.setFontSize(8.5); setTextColor(G4);
+  doc.text(`Quote #: ${qnum}`, ML, y+64);
+
+  // Logo text
+  doc.setFont('Helvetica','bold'); doc.setFontSize(18); setTextColor(G1);
+  doc.text('Comp', PW-MR-120, y+28, {align:'left'});
+  setTextColor(ORANGE); doc.text('SF', PW-MR-120+doc.getTextWidth('Comp')+1, y+28);
+  doc.setFont('Helvetica','normal'); doc.setFontSize(8); setTextColor(G3);
+  doc.text('IT & CYBER SECURITY SOLUTIONS', PW-MR-120, y+42);
+  doc.link(PW-MR-130, y, 130, 50, {url:'https://compsf.com'});
+
+  y += 68;
+
+  // Orange rule
+  box(ML, y, CW, 3, ORANGE); y += 14;
+
+  // Client block
+  const CH = 98;
+  box(ML, y, CW, CH, CARD);
+  hline(ML + CW*0.52, y+4, 0, DIV, 0.5);
+  doc.setLineWidth(0.5); setStroke(DIV);
+  doc.line(ML+CW*0.52, y+4, ML+CW*0.52, y+CH-4);
+
+  doc.setFont('Helvetica','bold'); doc.setFontSize(9.5); setTextColor(ORANGE);
+  doc.text('PREPARED FOR', ML+12, y+14);
+  doc.setFont('Helvetica','bold'); doc.setFontSize(9.5); setTextColor(G1);
+  doc.text(fullOrg, ML+12, y+28);
+
+  const pairs = [['Contact:', contact],['Industry:', industry],['CRM:', crm],['Platforms:', platforms]];
+  let py2 = y+42;
+  pairs.forEach(([lbl,val])=>{
+    doc.setFont('Helvetica','bold'); doc.setFontSize(9); setTextColor(G3); doc.text(lbl, ML+12, py2);
+    doc.setFont('Helvetica','normal'); setTextColor(G2);
+    const lines = doc.splitTextToSize(val, CW*0.45);
+    doc.text(lines[0]||'', ML+74, py2);
+    py2 += 13;
+  });
+
+  // Environment snapshot
+  const rx = ML + CW*0.52 + 12;
+  doc.setFont('Helvetica','bold'); doc.setFontSize(9.5); setTextColor(ORANGE);
+  doc.text('ENVIRONMENT SNAPSHOT', rx, y+14);
+  const half = (CW*0.48)/2;
+  let ey = y+30;
+  env.forEach(([a,b])=>{
+    doc.setFont('Helvetica','normal'); doc.setFontSize(9.5); setTextColor(GREEN);
+    doc.text('✓  '+a, rx, ey);
+    doc.text('✓  '+b, rx+half, ey);
+    ey += 13;
+  });
+
+  y += CH + 6;
+
+  // Plan 1
+  y = drawPlan(y, PLANS[0]);
+
+  footer(1);
+
+  // PAGE 2 — Plans 2 & 3
+  newPage(); y = MT;
+  y = drawPlan(y, PLANS[1]);
+  y += 8;
+  hline(ML, y+4, CW, DIV, 0.6); y += 10;
+  y = drawPlan(y, PLANS[2]);
+
+  footer(2);
+
+  // PAGE 3 — Comparison + Terms + Special Projects + CTA
+  newPage(); y = MT;
+
+  // Comparison
+  doc.setFont('Helvetica','bold'); doc.setFontSize(12); setTextColor(G1);
+  doc.text('PLAN COMPARISON AT A GLANCE', ML + CW/2, y, {align:'center'});
+  hline(ML+CW*0.25, y+4, CW*0.5, ORANGE, 1.5);
+  y += 22;
+
+  const COL = [ML, ML+210, ML+340, ML+432, ML+CW];
+  const RH = 19;
+
+  // Header row
+  box(ML, y, CW, RH, CARD2);
+  box(COL[3], y, COL[4]-COL[3], RH, ORANGE);
+  doc.setFont('Helvetica','bold'); doc.setFontSize(9.5); setTextColor(ORANGE);
+  doc.text('FEATURE', COL[0]+8, y+13);
+  setTextColor(G2); doc.text('Break / Fix', (COL[1]+COL[2])/2, y+13, {align:'center'});
+  doc.text('Basic Plan', (COL[2]+COL[3])/2, y+13, {align:'center'});
+  setTextColor(WHITE); doc.text('Advanced ★', (COL[3]+COL[4])/2, y+13, {align:'center'});
+  hline(ML, y+RH, CW, ORANGE, 1.2); y += RH;
+
+  CMP_DATA.forEach(([feat,v1,v2,v3],i)=>{
+    const isTotal = feat === 'Est. Monthly Cost';
+    const rowH = isTotal ? RH+4 : RH;
+    const bg = isTotal ? [255,248,246] : (i%2===0 ? CARD : WHITE);
+    const bg3 = isTotal ? [255,238,232] : (i%2===0 ? [249,237,234] : OR_LITE);
+    box(ML, y, COL[3]-ML, rowH, bg);
+    box(COL[3], y, COL[4]-COL[3], rowH, bg3);
+
+    if(isTotal){
+      setStroke(ORANGE); doc.setLineWidth(1.5);
+      doc.roundedRect(ML, y, CW, rowH, 3, 3, 'S');
+    }
+
+    const ty = y + rowH - 6;
+    const vc = v => v==='✓'||v==='INCLUDED'||v==='✓ Unlimited' ? GREEN : v==='-' ? CROSS : isTotal ? ORANGE : G2;
+    const vf = v => (v==='INCLUDED'||v==='✓ Unlimited'||isTotal) ? 'bold' : 'normal';
+
+    doc.setFont('Helvetica', isTotal?'bold':'normal'); doc.setFontSize(9);
+    setTextColor(isTotal ? ORANGE : G2); doc.text(feat, COL[0]+8, ty);
+    [[v1,COL[1],COL[2]],[v2,COL[2],COL[3]],[v3,COL[3],COL[4]]].forEach(([v,c1,c2])=>{
+      doc.setFont('Helvetica',vf(v)); setTextColor(vc(v));
+      doc.text(v, (c1+c2)/2, ty, {align:'center'});
+    });
+    if(!isTotal) hline(ML, y+rowH, CW, DIV, 0.4);
+    [COL[1],COL[2],COL[3]].forEach(cx=>{ setStroke(DIV); doc.setLineWidth(0.4); doc.line(cx,y,cx,y+rowH); });
+    y += rowH;
+  });
+
+  y += 18;
+
+  // Terms
+  y = checkPage(y, 100);
+  doc.setFont('Helvetica','bold'); doc.setFontSize(12); setTextColor(G1);
+  box(ML, y-14, 3, 17, ORANGE);
+  doc.text('TERMS & NOTES', ML+8, y); y += 18;
+
+  const TW1 = 100;
+  TERMS.forEach(([lbl,body],i)=>{
+    const bg = i%2===0 ? CARD : WHITE;
+    const lines = doc.splitTextToSize(body, CW-TW1-16);
+    const th = Math.max(18, lines.length*12+10);
+    y = checkPage(y, th+2);
+    box(ML, y, CW, th, bg);
+    doc.setFont('Helvetica','bold'); doc.setFontSize(9); setTextColor(ORANGE); doc.text(lbl, ML+8, y+10);
+    doc.setFont('Helvetica','normal'); setTextColor(G2); lines.forEach((ln,j)=>{ doc.text(ln, ML+TW1, y+10+j*12); });
+    hline(ML, y+th, CW, DIV, 0.3);
+    y += th;
+  });
+
+  y += 14;
+
+  // Special Projects
+  y = checkPage(y, 80);
+  box(ML, y, CW, 3, ORANGE);
+  const spTitleY = y+3;
+  doc.setFont('Helvetica','bold'); doc.setFontSize(10); setTextColor(ORANGE);
+
+  let spH = 16+14;
+  SP_PROJECTS.forEach(([t,b])=>{ spH += 13 + doc.splitTextToSize(b, CW-28).length*11+5; });
+  spH += 30;
+
+  box(ML, spTitleY, CW, spH, CARD);
+  box(ML, spTitleY, 3, spH, ORANGE);
+
+  doc.text('WHAT IS A SPECIAL PROJECT?  ·  Billed at $180/hr', ML+14, spTitleY+14);
+
+  doc.setFont('Helvetica','normal'); doc.setFontSize(8); setTextColor(BLUE);
+  const lt = 'Check out our website for more info';
+  const lw2 = doc.getTextWidth(lt);
+  doc.text(lt, ML+CW-14, spTitleY+14, {align:'right'});
+  doc.link(ML+CW-14-lw2, spTitleY+6, lw2, 10, {url:'https://compsf.com/#services'});
+
+  doc.setFont('Helvetica','italic'); doc.setFontSize(8); setTextColor(G3);
+  doc.text('Special projects fall outside routine IT support. Any planning, major changes, or new implementations is scoped as a separate project.', ML+14, spTitleY+26, {maxWidth: CW-28});
+
+  let siy = spTitleY + 40;
+  SP_PROJECTS.forEach(([title,body])=>{
+    doc.setFont('Helvetica','bold'); doc.setFontSize(8.5); setTextColor(G1);
+    doc.text(title, ML+14, siy); siy += 12;
+    doc.setFont('Helvetica','normal'); setTextColor(G2);
+    const lines = doc.splitTextToSize(body, CW-28);
+    lines.forEach(ln=>{ doc.text(ln, ML+14, siy); siy+=11; });
+    siy += 4;
+  });
+
+  // Important note
+  const noteH = 26;
+  box(ML+6, siy, CW-12, noteH, [250,240,236]);
+  doc.setFont('Helvetica','bold'); doc.setFontSize(8.5); setTextColor(ORANGE);
+  doc.text('Important Note:', ML+14, siy+9);
+  doc.setFont('Helvetica','normal'); setTextColor(G2);
+  const noteText = 'Your monthly plan covers ongoing support, maintenance, and troubleshooting. Any planning, major changes, or new implementations are treated as a separate project and billed at $180/hr.';
+  const noteLines = doc.splitTextToSize(noteText, CW-28);
+  noteLines.forEach((ln,i)=>{ doc.text(ln, ML+14, siy+9+(i+1)*11); });
+
+  y = spTitleY + spH + 14;
+
+  // CTA
+  const ctaH = 140;
+  y = checkPage(y, ctaH+10);
+  box(ML, y, CW, 3, ORANGE);
+  box(ML, y+3, CW, ctaH, CARD);
+
+  doc.setFont('Helvetica','bold'); doc.setFontSize(16); setTextColor(ORANGE);
+  doc.text('Ready to get started?', ML+14, y+22);
+  doc.setFont('Helvetica','normal'); doc.setFontSize(9); setTextColor(G2);
+  doc.text("Select a plan and we'll schedule your kickoff call.", ML+14, y+36);
+  doc.setFont('Helvetica','bold'); doc.setFontSize(9.5); setTextColor(G1);
+  doc.text('Shahar Geva  |  Founder & CEO', ML+14, y+50);
+  doc.setFont('Helvetica','normal'); doc.setFontSize(9); setTextColor(ORANGE);
+  doc.text('CompSF IT & Cyber Security Solutions', ML+14, y+62);
+  doc.setFontSize(8.5); setTextColor(G3);
+  doc.text('compsf.com  ·  548 Market St, San Francisco CA 94104', ML+14, y+74);
+
+  hline(ML+10, y+82, CW-20, DIV, 0.5);
+
+  doc.setFont('Helvetica','bold'); doc.setFontSize(10); setTextColor(ORANGE);
+  doc.text('ACCEPTANCE', ML+14, y+96);
+  doc.setFont('Helvetica','normal'); doc.setFontSize(9); setTextColor(G2);
+  doc.text('☐  Break / Fix (On-Demand)', ML+14, y+110);
+  doc.text('☐  Basic Support Plan', ML+174, y+110);
+  doc.text('☐  Advanced (All-Inclusive)', ML+314, y+110);
+  setTextColor(G3);
+  doc.text('Signature: _________________________________   Date: _______________', ML+14, y+126);
+
+  footer(3);
+
+  // — Save —
+  const filename = `CompSF_Quote_${org.replace(/\s+/g,'_').substring(0,30)}_${today.getFullYear()}${pad(today.getMonth()+1)}.pdf`;
+  doc.save(filename);
+  showToast(`✓ Saved as ${filename}`);
+}
+
+function setActive(el){
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
