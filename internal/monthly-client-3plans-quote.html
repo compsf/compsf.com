@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CompSF — Quote Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Georgia', 'Times New Roman', serif;
+    font-family: 'Inter', sans-serif;
     background: #0e0e0e;
     color: #e8e2d9;
     min-height: 100vh;
@@ -29,12 +30,12 @@
     z-index: 100;
   }
   .topbar-logo {
-    font-family: 'Georgia', serif;
+    font-family: 'Inter', sans-serif;
     font-size: 18px;
     letter-spacing: -0.02em;
     color: #fff;
   }
-  .topbar-logo span { color: #C0392B; }
+  .topbar-logo span { color: #9b1520; }
   .topbar-tag {
     font-size: 11px;
     letter-spacing: 0.12em;
@@ -50,18 +51,18 @@
     gap: 12px;
   }
   .btn-generate {
-    background: #C0392B;
+    background: #9b1520;
     color: #fff;
     border: none;
     padding: 9px 22px;
-    font-family: 'Georgia', serif;
+    font-family: 'Inter', sans-serif;
     font-size: 13px;
     letter-spacing: 0.04em;
     cursor: pointer;
     border-radius: 3px;
     transition: background 0.15s;
   }
-  .btn-generate:hover { background: #a93226; }
+  .btn-generate:hover { background: #7a1018; }
   .btn-generate:active { transform: scale(0.98); }
 
   /* — Layout — */
@@ -103,14 +104,14 @@
     text-decoration: none;
   }
   .nav-item:hover { color: #e8e2d9; background: #1a1a1a; }
-  .nav-item.active { color: #e8e2d9; border-left-color: #C0392B; background: #1a1a1a; }
+  .nav-item.active { color: #e8e2d9; border-left-color: #9b1520; background: #1a1a1a; }
   .nav-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
     background: #333;
     flex-shrink: 0;
   }
-  .nav-item.active .nav-dot { background: #C0392B; }
+  .nav-item.active .nav-dot { background: #9b1520; }
 
   /* — Main content — */
   .main {
@@ -146,7 +147,7 @@
   }
   .section-num {
     font-size: 11px;
-    color: #C0392B;
+    color: #9b1520;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     font-family: 'Courier New', monospace;
@@ -176,7 +177,7 @@
     text-transform: uppercase;
     color: #888;
   }
-  .field label .req { color: #C0392B; margin-left: 2px; }
+  .field label .req { color: #9b1520; margin-left: 2px; }
 
   input[type="text"],
   input[type="date"],
@@ -187,7 +188,7 @@
     color: #e8e2d9;
     padding: 10px 13px;
     font-size: 13px;
-    font-family: 'Georgia', serif;
+    font-family: 'Inter', sans-serif;
     border-radius: 3px;
     outline: none;
     transition: border-color 0.12s;
@@ -197,7 +198,7 @@
   input[type="date"]:focus,
   select:focus,
   textarea:focus {
-    border-color: #C0392B;
+    border-color: #9b1520;
     background: #1e1515;
   }
   input::placeholder,
@@ -221,7 +222,7 @@
   }
   .checkbox-item input[type="checkbox"] {
     width: 16px; height: 16px;
-    accent-color: #C0392B;
+    accent-color: #9b1520;
     cursor: pointer;
   }
   .checkbox-item span {
@@ -297,7 +298,7 @@
     bottom: 30px;
     right: 30px;
     background: #1a1a1a;
-    border: 1px solid #C0392B;
+    border: 1px solid #9b1520;
     color: #e8e2d9;
     padding: 12px 20px;
     font-size: 13px;
@@ -314,7 +315,7 @@
 <body>
 
 <div class="topbar">
-  <div class="topbar-logo">Comp<span>SF</span></div>
+  <img src="/Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" height="32" style="display:block;">
   <div class="topbar-tag">Quote Generator</div>
   <div class="topbar-right">
     <button class="btn-generate" onclick="generatePDF()">⬇ Generate & Save PDF</button>
@@ -541,7 +542,16 @@ function showToast(msg, duration=2800){
 }
 
 // — PDF GENERATION —
-function generatePDF(){
+function loadLogoBase64(url){
+  return new Promise(resolve=>{
+    const img=new Image(); img.crossOrigin='anonymous';
+    img.onload=()=>{ const c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight; c.getContext('2d').drawImage(img,0,0); resolve({data:c.toDataURL('image/png'),w:img.naturalWidth,h:img.naturalHeight}); };
+    img.onerror=()=>resolve(null);
+    img.src=url;
+  });
+}
+
+async function generatePDF(){
   const org      = g('f_org');
   const contact  = g('f_contact');
   const industry = g('f_industry');
@@ -550,6 +560,8 @@ function generatePDF(){
     showToast('Please fill in Organization, Contact, and Industry');
     return;
   }
+
+  const logoInfo = await loadLogoBase64('/Logo_CompSF_wTagline_Color_01_RGB.png');
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation:'portrait', unit:'pt', format:'letter' });
@@ -874,13 +886,9 @@ function generatePDF(){
   doc.setFontSize(8.5); setTextColor(G4);
   doc.text(`Quote #: ${qnum}`, ML, y+64);
 
-  // Logo text
-  doc.setFont('Helvetica','bold'); doc.setFontSize(18); setTextColor(G1);
-  doc.text('Comp', PW-MR-120, y+28, {align:'left'});
-  setTextColor(ORANGE); doc.text('SF', PW-MR-120+doc.getTextWidth('Comp')+1, y+28);
-  doc.setFont('Helvetica','normal'); doc.setFontSize(8); setTextColor(G3);
-  doc.text('IT & CYBER SECURITY SOLUTIONS', PW-MR-120, y+42);
-  doc.link(PW-MR-130, y, 130, 50, {url:'https://compsf.com'});
+  // Logo image
+  if(logoInfo){ const lh=Math.round(130*logoInfo.h/logoInfo.w); doc.addImage(logoInfo.data,'PNG',PW-MR-130,y+2,130,lh); doc.link(PW-MR-130,y+2,130,lh,{url:'https://compsf.com'}); }
+  else{ doc.setFont('Helvetica','bold'); doc.setFontSize(18); setTextColor(G1); doc.text('Comp',PW-MR-120,y+28); setTextColor(ORANGE); doc.text('SF',PW-MR-120+doc.getTextWidth('Comp')+1,y+28); }
 
   y += 68;
 

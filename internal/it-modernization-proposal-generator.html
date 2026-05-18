@@ -4,18 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CompSF — IT Modernization Proposal Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Georgia', serif; background: #0e0e0e; color: #e8e2d9; min-height: 100vh; }
+  body { font-family: 'Inter', sans-serif; background: #0e0e0e; color: #e8e2d9; min-height: 100vh; }
 
   .topbar { background: #141414; border-bottom: 1px solid #2a2a2a; padding: 14px 40px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
   .topbar-logo { font-size: 18px; letter-spacing: -0.02em; color: #fff; }
-  .topbar-logo span { color: #C0392B; }
+  .topbar-logo span { color: #9b1520; }
   .topbar-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #666; border-left: 1px solid #333; padding-left: 16px; }
   .topbar-right { margin-left: auto; }
-  .btn-gen { background: #C0392B; color: #fff; border: none; padding: 9px 22px; font-family: 'Georgia', serif; font-size: 13px; letter-spacing: 0.04em; cursor: pointer; border-radius: 3px; transition: background 0.15s; }
-  .btn-gen:hover { background: #a93226; }
+  .btn-gen { background: #9b1520; color: #fff; border: none; padding: 9px 22px; font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 0.04em; cursor: pointer; border-radius: 3px; transition: background 0.15s; }
+  .btn-gen:hover { background: #7a1018; }
   .btn-gen:active { transform: scale(0.98); }
 
   .layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 57px); }
@@ -25,9 +26,9 @@
   .nav-section:first-child { margin-top: 0; }
   .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 24px; font-size: 13px; color: #999; cursor: pointer; border-left: 2px solid transparent; transition: all 0.12s; text-decoration: none; }
   .nav-item:hover { color: #e8e2d9; background: #1a1a1a; }
-  .nav-item.active { color: #e8e2d9; border-left-color: #C0392B; background: #1a1a1a; }
+  .nav-item.active { color: #e8e2d9; border-left-color: #9b1520; background: #1a1a1a; }
   .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #333; flex-shrink: 0; }
-  .nav-item.active .nav-dot { background: #C0392B; }
+  .nav-item.active .nav-dot { background: #9b1520; }
 
   .main { padding: 40px 56px; max-width: 840px; }
   .page-title { font-size: 26px; font-weight: normal; letter-spacing: -0.02em; color: #fff; margin-bottom: 4px; }
@@ -35,7 +36,7 @@
 
   .form-section { margin-bottom: 48px; scroll-margin-top: 80px; }
   .section-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid #222; }
-  .section-num { font-size: 11px; color: #C0392B; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Courier New', monospace; }
+  .section-num { font-size: 11px; color: #9b1520; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Courier New', monospace; }
   .section-name { font-size: 15px; color: #e8e2d9; }
 
   .field-grid { display: grid; gap: 14px; }
@@ -44,14 +45,14 @@
   .field-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
   .field { display: flex; flex-direction: column; gap: 6px; }
   .field label { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: #888; }
-  .field label .req { color: #C0392B; margin-left: 2px; }
+  .field label .req { color: #9b1520; margin-left: 2px; }
 
   input[type="text"], textarea {
     background: #1a1a1a; border: 1px solid #2e2e2e; color: #e8e2d9;
-    padding: 9px 12px; font-size: 13px; font-family: 'Georgia', serif;
+    padding: 9px 12px; font-size: 13px; font-family: 'Inter', sans-serif;
     border-radius: 3px; outline: none; transition: border-color 0.12s; width: 100%;
   }
-  input[type="text"]:focus, textarea:focus { border-color: #C0392B; background: #1e1515; }
+  input[type="text"]:focus, textarea:focus { border-color: #9b1520; background: #1e1515; }
   input::placeholder, textarea::placeholder { color: #444; }
   textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
@@ -68,14 +69,14 @@
   .preview-val { color: #aaa; }
   .preview-val.filled { color: #e8e2d9; }
 
-  .toast { position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; border: 1px solid #C0392B; color: #e8e2d9; padding: 12px 20px; font-size: 13px; border-radius: 3px; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; z-index: 999; }
+  .toast { position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; border: 1px solid #9b1520; color: #e8e2d9; padding: 12px 20px; font-size: 13px; border-radius: 3px; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; z-index: 999; }
   .toast.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="topbar-logo">Comp<span>SF</span></div>
+  <img src="/Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" height="32" style="display:block;">
   <div class="topbar-tag">IT Modernization Proposal Generator</div>
   <div class="topbar-right">
     <button class="btn-gen" onclick="generatePDF()">&#8595; Generate PDF</button>
@@ -330,9 +331,20 @@ function showToast(msg,dur=2800){ const t=document.getElementById('toast'); t.te
 // ─────────────────────────────────────────────────────────────
 //  PDF GENERATION
 // ─────────────────────────────────────────────────────────────
-function generatePDF(){
+function loadLogoBase64(url){
+  return new Promise(resolve=>{
+    const img=new Image(); img.crossOrigin='anonymous';
+    img.onload=()=>{ const c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight; c.getContext('2d').drawImage(img,0,0); resolve({data:c.toDataURL('image/png'),w:img.naturalWidth,h:img.naturalHeight}); };
+    img.onerror=()=>resolve(null);
+    img.src=url;
+  });
+}
+
+async function generatePDF(){
   const client = g('f_client');
   if(!client){ showToast('Please enter a client name'); return; }
+
+  const logoInfo = await loadLogoBase64('/Logo_CompSF_wTagline_Color_01_RGB.png');
 
   const {jsPDF} = window.jspdf;
   const doc = new jsPDF({orientation:'portrait', unit:'pt', format:'letter'});
@@ -427,9 +439,8 @@ function generatePDF(){
   let y = MT;
 
   // logo top-right
-  doc.setFont('Helvetica','bold'); doc.setFontSize(20); st(NAVY);
-  const cw=doc.getTextWidth('Comp'); doc.text('Comp',PW-MR-106,y+22); st(ORANGE); doc.text('SF',PW-MR-106+cw,y+22);
-  doc.setFont('Helvetica','normal'); doc.setFontSize(7.5); st(G3); doc.text('IT & CYBER SECURITY SOLUTIONS',PW-MR-106,y+34);
+  if(logoInfo){ const lh=Math.round(120*logoInfo.h/logoInfo.w); doc.addImage(logoInfo.data,'PNG',PW-MR-120,y+2,120,lh); doc.link(PW-MR-120,y+2,120,lh,{url:'https://compsf.com'}); }
+  else{ doc.setFont('Helvetica','bold'); doc.setFontSize(20); st(NAVY); const cw=doc.getTextWidth('Comp'); doc.text('Comp',PW-MR-106,y+22); st(ORANGE); doc.text('SF',PW-MR-106+cw,y+22); doc.setFont('Helvetica','normal'); doc.setFontSize(7.5); st(G3); doc.text('IT & CYBER SECURITY SOLUTIONS',PW-MR-106,y+34); }
 
   // date top-left
   T(ML,y+14,propDate,9,G3,false);
