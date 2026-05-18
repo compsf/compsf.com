@@ -310,6 +310,22 @@
     z-index: 999;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── History ── */
+  .history-hdr { display:flex; align-items:center; justify-content:space-between; padding:6px 24px 4px; margin-top:20px; }
+  .history-hdr span { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#444; }
+  .history-clear-btn { font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:#444; background:none; border:none; cursor:pointer; font-family:'Inter',sans-serif; }
+  .history-clear-btn:hover { color:#888; }
+  .history-entry { padding:8px 24px; cursor:pointer; border-left:2px solid transparent; transition:all 0.12s; position:relative; }
+  .history-entry:hover { background:#1a1a1a; border-left-color:#555; }
+  .history-entry:hover .h-del { opacity:1; }
+  .h-name { font-size:12px; color:#bbb; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:18px; }
+  .h-meta { font-size:10px; color:#555; display:block; margin-top:2px; }
+  .h-del { position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:14px; color:#555; background:none; border:none; cursor:pointer; opacity:0; transition:opacity 0.1s; padding:2px 4px; line-height:1; }
+  .h-del:hover { color:#9b1520; }
+  .history-empty { padding:10px 24px; font-size:11px; color:#444; font-style:italic; }
+  .btn-new { background:transparent; color:#888; border:1px solid #333; padding:7px 14px; font-family:'Inter',sans-serif; font-size:12px; cursor:pointer; border-radius:3px; transition:all 0.15s; margin-right:8px; }
+  .btn-new:hover { color:#e8e2d9; border-color:#666; }
 </style>
 </head>
 <body>
@@ -318,6 +334,7 @@
   <img src="/Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" height="32" style="display:block;">
   <div class="topbar-tag">Quote Generator</div>
   <div class="topbar-right">
+    <button class="btn-new" onclick="newForm()">+ New Quote</button>
     <button class="btn-generate" onclick="generatePDF()">⬇ Generate & Save PDF</button>
   </div>
 </div>
@@ -343,6 +360,8 @@
     <a class="nav-item" href="#preview" onclick="setActive(this)">
       <span class="nav-dot"></span> Preview
     </a>
+    <div class="history-hdr"><span>Recent</span><button class="history-clear-btn" onclick="clearHistory()">Clear all</button></div>
+    <div id="history-list"></div>
   </nav>
 
   <!-- Main form -->
@@ -1097,6 +1116,7 @@ async function generatePDF(){
 
   // — Save —
   const filename = `CompSF_Quote_${org.replace(/\s+/g,'_').substring(0,30)}_${today.getFullYear()}${pad(today.getMonth()+1)}.pdf`;
+  saveToHistory();
   doc.save(filename);
   showToast(`✓ Saved as ${filename}`);
 }
@@ -1105,6 +1125,66 @@ function setActive(el){
   document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');
 }
+
+// ── HISTORY ──────────────────────────────────────────────────
+const HISTORY_KEY = 'compsf_3plans_history';
+const FORM_FIELDS = ['f_date','f_valid','f_qnum','f_org','f_sub','f_contact','f_industry','f_crm','f_platforms','f_antivirus','f_saas','e_a1','e_b1','e_a2','e_b2','e_a3','e_b3','e_a4','e_b4'];
+const FORM_CHECKS = ['f_server_yes','f_server_no'];
+
+function saveToHistory(){
+  const data={};
+  FORM_FIELDS.forEach(id=>{ const el=document.getElementById(id); if(el) data[id]=el.value; });
+  FORM_CHECKS.forEach(id=>{ const el=document.getElementById(id); if(el) data[id]=el.checked; });
+  const label=(data['f_org']||'Untitled').trim();
+  const entry={ id:Date.now(), label, dateLabel:data['f_date']||'', savedAt:new Date().toISOString(), fields:data };
+  let hist=getHistory(); hist.unshift(entry);
+  if(hist.length>25) hist=hist.slice(0,25);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(hist));
+  renderHistory();
+}
+
+function getHistory(){ try{ return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'); }catch(e){ return[]; } }
+
+function renderHistory(){
+  const list=document.getElementById('history-list'); if(!list) return;
+  const hist=getHistory();
+  if(!hist.length){ list.innerHTML='<div class="history-empty">No history yet</div>'; return; }
+  list.innerHTML=hist.map(e=>`
+    <div class="history-entry" onclick="loadEntry(${e.id})">
+      <span class="h-name">${esc(e.label)}</span>
+      <span class="h-meta">${esc(e.dateLabel||'')}${e.dateLabel?' · ':''}${timeAgo(e.savedAt)}</span>
+      <button class="h-del" onclick="deleteEntry(event,${e.id})" title="Remove">×</button>
+    </div>`).join('');
+}
+
+function loadEntry(id){
+  const entry=getHistory().find(e=>e.id===id); if(!entry) return;
+  FORM_FIELDS.forEach(fid=>{ const el=document.getElementById(fid); if(el && fid in entry.fields) el.value=entry.fields[fid]; });
+  FORM_CHECKS.forEach(fid=>{ const el=document.getElementById(fid); if(el && fid in entry.fields) el.checked=entry.fields[fid]; });
+  updatePreview();
+  window.scrollTo({top:0,behavior:'smooth'});
+  showToast('Loaded: '+entry.label);
+}
+
+function deleteEntry(evt,id){
+  evt.stopPropagation();
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(getHistory().filter(e=>e.id!==id)));
+  renderHistory();
+}
+
+function clearHistory(){ if(!confirm('Clear all history?')) return; localStorage.removeItem(HISTORY_KEY); renderHistory(); }
+
+function newForm(){ window.location.reload(); }
+
+function timeAgo(iso){
+  const m=Math.floor((Date.now()-new Date(iso).getTime())/60000);
+  if(m<1) return'just now'; if(m<60) return m+'m ago';
+  const h=Math.floor(m/60); if(h<24) return h+'h ago';
+  return Math.floor(h/24)+'d ago';
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+renderHistory();
 </script>
 </body>
 </html>
