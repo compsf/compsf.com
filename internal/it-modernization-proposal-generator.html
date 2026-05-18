@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompSF — IT Modernization Proposal Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: #0e0e0e; color: #e8e2d9; min-height: 100vh; }
+
+  .topbar { background: #141414; border-bottom: 1px solid #2a2a2a; padding: 14px 40px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+  .topbar-logo { font-size: 18px; letter-spacing: -0.02em; color: #fff; }
+  .topbar-logo span { color: #C0392B; }
+  .topbar-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #666; border-left: 1px solid #333; padding-left: 16px; }
+  .topbar-right { margin-left: auto; }
+  .btn-gen { background: #C0392B; color: #fff; border: none; padding: 9px 22px; font-family: 'Georgia', serif; font-size: 13px; letter-spacing: 0.04em; cursor: pointer; border-radius: 3px; transition: background 0.15s; }
+  .btn-gen:hover { background: #a93226; }
+  .btn-gen:active { transform: scale(0.98); }
+
+  .layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 57px); }
+
+  .sidebar { background: #111; border-right: 1px solid #222; padding: 28px 0; position: sticky; top: 57px; height: calc(100vh - 57px); overflow-y: auto; }
+  .nav-section { padding: 6px 24px; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #444; margin-top: 18px; }
+  .nav-section:first-child { margin-top: 0; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 24px; font-size: 13px; color: #999; cursor: pointer; border-left: 2px solid transparent; transition: all 0.12s; text-decoration: none; }
+  .nav-item:hover { color: #e8e2d9; background: #1a1a1a; }
+  .nav-item.active { color: #e8e2d9; border-left-color: #C0392B; background: #1a1a1a; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #333; flex-shrink: 0; }
+  .nav-item.active .nav-dot { background: #C0392B; }
+
+  .main { padding: 40px 56px; max-width: 840px; }
+  .page-title { font-size: 26px; font-weight: normal; letter-spacing: -0.02em; color: #fff; margin-bottom: 4px; }
+  .page-sub { font-size: 13px; color: #666; margin-bottom: 40px; }
+
+  .form-section { margin-bottom: 48px; scroll-margin-top: 80px; }
+  .section-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid #222; }
+  .section-num { font-size: 11px; color: #C0392B; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Courier New', monospace; }
+  .section-name { font-size: 15px; color: #e8e2d9; }
+
+  .field-grid { display: grid; gap: 14px; }
+  .field-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .field-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: #888; }
+  .field label .req { color: #C0392B; margin-left: 2px; }
+
+  input[type="text"], textarea {
+    background: #1a1a1a; border: 1px solid #2e2e2e; color: #e8e2d9;
+    padding: 9px 12px; font-size: 13px; font-family: 'Georgia', serif;
+    border-radius: 3px; outline: none; transition: border-color 0.12s; width: 100%;
+  }
+  input[type="text"]:focus, textarea:focus { border-color: #C0392B; background: #1e1515; }
+  input::placeholder, textarea::placeholder { color: #444; }
+  textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
+
+  .hint { font-size: 11px; color: #555; margin-top: 3px; }
+  .opt-badge { display: inline-block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; margin-bottom: 12px; }
+  .badge-a { background: #1a2a3a; color: #6ab0d4; border: 1px solid #2a4a6a; }
+  .badge-b { background: #2a1a15; color: #e8a090; border: 1px solid #5a2a20; }
+
+  .preview-card { background: #141414; border: 1px solid #222; border-radius: 4px; padding: 18px 22px; margin-top: 36px; }
+  .preview-title { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #555; margin-bottom: 12px; }
+  .preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; }
+  .preview-row { display: flex; gap: 8px; font-size: 12px; padding: 4px 0; border-bottom: 1px solid #1e1e1e; }
+  .preview-key { color: #555; min-width: 110px; flex-shrink: 0; }
+  .preview-val { color: #aaa; }
+  .preview-val.filled { color: #e8e2d9; }
+
+  .toast { position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; border: 1px solid #C0392B; color: #e8e2d9; padding: 12px 20px; font-size: 13px; border-radius: 3px; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; z-index: 999; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">Comp<span>SF</span></div>
+  <div class="topbar-tag">IT Modernization Proposal Generator</div>
+  <div class="topbar-right">
+    <button class="btn-gen" onclick="generatePDF()">&#8595; Generate PDF</button>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-section">Sections</div>
+    <a class="nav-item active" href="#s-client" onclick="setActive(this)"><span class="nav-dot"></span> Client &amp; Date</a>
+    <a class="nav-item" href="#s-risks" onclick="setActive(this)"><span class="nav-dot"></span> Current Situation</a>
+    <a class="nav-item" href="#s-phases" onclick="setActive(this)"><span class="nav-dot"></span> Phases 1 &amp; 2</a>
+    <a class="nav-item" href="#s-optA" onclick="setActive(this)"><span class="nav-dot"></span> Option A Pricing</a>
+    <a class="nav-item" href="#s-optB" onclick="setActive(this)"><span class="nav-dot"></span> Option B Pricing</a>
+    <a class="nav-item" href="#s-benefits" onclick="setActive(this)"><span class="nav-dot"></span> Benefits &amp; CTA</a>
+    <div class="nav-section">Output</div>
+    <a class="nav-item" href="#s-preview" onclick="setActive(this)"><span class="nav-dot"></span> Preview &amp; Generate</a>
+  </nav>
+
+  <main class="main">
+    <h1 class="page-title">IT Modernization Proposal</h1>
+    <p class="page-sub">Fill in the fields below, then click Generate PDF to download the branded proposal.</p>
+
+    <!-- 01 Client -->
+    <section class="form-section" id="s-client">
+      <div class="section-header"><span class="section-num">01</span><span class="section-name">Client &amp; Date</span></div>
+      <div class="field-grid cols-2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Client name <span class="req">*</span></label>
+          <input type="text" id="f_client" value="Mountain Vista Farm" oninput="updatePreview()">
+        </div>
+        <div class="field">
+          <label>Subtitle / Confidential tag</label>
+          <input type="text" id="f_subtitle" value="Mountain Vista Farm &#x2022; Confidential">
+        </div>
+      </div>
+      <div class="field-grid cols-3">
+        <div class="field">
+          <label>Proposal date (display)</label>
+          <input type="text" id="f_date" value="April 2026" oninput="updatePreview()">
+        </div>
+        <div class="field">
+          <label>Proposal title</label>
+          <input type="text" id="f_proptitle" value="IT Modernization Proposal">
+        </div>
+        <div class="field">
+          <label>Tagline (italic under title)</label>
+          <input type="text" id="f_tagline" value="A full transition to secure, cloud-based IT &#x2014; with zero disruption to daily care.">
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 Risks -->
+    <section class="form-section" id="s-risks">
+      <div class="section-header"><span class="section-num">02</span><span class="section-name">Current Situation &#x2014; Critical Risks</span></div>
+      <div class="field-grid cols-1" style="margin-bottom:12px;">
+        <div class="field">
+          <label>Risk 1 <span class="req">*</span></label>
+          <input type="text" id="f_risk1" value="Backups are not running &#x2014; if the server fails today, data recovery is not guaranteed">
+        </div>
+      </div>
+      <div class="field-grid cols-1" style="margin-bottom:12px;">
+        <div class="field">
+          <label>Risk 2 <span class="req">*</span></label>
+          <input type="text" id="f_risk2" value="Main server is 10+ years old, running an OLD OS &#x2014; a single failure means extended downtime">
+        </div>
+      </div>
+      <div class="field-grid cols-1" style="margin-bottom:12px;">
+        <div class="field">
+          <label>Risk 3 <span class="req">*</span></label>
+          <input type="text" id="f_risk3" value="No AV protection, no MFA, no password management &#x2014; the environment has no security net">
+        </div>
+      </div>
+      <div class="field-grid cols-1">
+        <div class="field">
+          <label>Risk box footnote</label>
+          <input type="text" id="f_riskfooter" value="The risk assessment we worked on in February covers every finding &#x2014; it&#x27;s all documented and ready to act on.">
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Phases -->
+    <section class="form-section" id="s-phases">
+      <div class="section-header"><span class="section-num">03</span><span class="section-name">What We&#x27;re Proposing &#x2014; Phases</span></div>
+      <p class="hint" style="margin-bottom:16px;">One item per line. These appear as bullet lists in the PDF.</p>
+      <div class="field-grid cols-2">
+        <div class="field">
+          <label>Phase 1 &#x2014; Onboarding items</label>
+          <textarea id="f_phase1">Backup implementation &amp; verification
+Security baseline + MFA + password management, Email security
+Microsoft 365 migration &amp; SharePoint setup
+Server decommission
+New Workstations setup &amp; configuration
+User Training: Organizational and Cyber awareness. Conditional Access policies
+Remote work enablement</textarea>
+        </div>
+        <div class="field">
+          <label>Phase 2 &#x2014; Ongoing Managed IT items</label>
+          <textarea id="f_phase2">Proactive monitoring &amp; maintenance
+Security management &amp; updates
+Backup verification
+User support &amp; helpdesk
+Employee onboarding/Offboarding
+Cloud &amp; device management
+Email security &amp; anti-phishing monitoring
+Network monitoring
+Monthly reporting &amp; vCIO check-in</textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 Option A -->
+    <section class="form-section" id="s-optA">
+      <div class="section-header"><span class="section-num">04</span><span class="section-name">Option A &#x2014; Upfront Project + Monthly Support</span></div>
+      <div class="opt-badge badge-a">Option A</div>
+      <div class="field-grid cols-3" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Onboarding project (one-time)</label>
+          <input type="text" id="a_project" value="$25,200" oninput="updatePreview()">
+        </div>
+        <div class="field">
+          <label>Monthly managed services</label>
+          <input type="text" id="a_monthly" value="$4,750/month" oninput="updatePreview()">
+        </div>
+        <div class="field">
+          <label>Device range</label>
+          <input type="text" id="a_devices" value="15-20 devices">
+        </div>
+      </div>
+      <div class="field-grid cols-3" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Rate per device</label>
+          <input type="text" id="a_rate" value="$250/device/month">
+        </div>
+        <div class="field">
+          <label>Hardware total range</label>
+          <input type="text" id="a_hw_range" value="~$14,000&#x2013;$18,200">
+        </div>
+        <div class="field">
+          <label>Hardware description</label>
+          <input type="text" id="a_hw_desc" value="14-15 computers @ $1,000&#x2013;$1,300 each + Tax">
+        </div>
+      </div>
+      <p style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Hardware Financing Example</p>
+      <div class="field-grid cols-4">
+        <div class="field"><label>Total financed</label><input type="text" id="a_fin_total" value="$15,330"></div>
+        <div class="field"><label>12-month rate</label><input type="text" id="a_fin_12" value="~$1,500/mo."></div>
+        <div class="field"><label>24-month rate</label><input type="text" id="a_fin_24" value="~$640/mo."></div>
+        <div class="field"><label>36-month rate</label><input type="text" id="a_fin_36" value="~$426/mo."></div>
+      </div>
+    </section>
+
+    <!-- 05 Option B -->
+    <section class="form-section" id="s-optB">
+      <div class="section-header"><span class="section-num">05</span><span class="section-name">Option B &#x2014; Bundled Monthly Plan</span></div>
+      <div class="opt-badge badge-b">Option B &#x2014; Recommended</div>
+      <div class="field-grid cols-2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Year 1 monthly (bundled)</label>
+          <input type="text" id="b_y1" value="$6,000/mo." oninput="updatePreview()">
+        </div>
+        <div class="field">
+          <label>Year 2+ monthly</label>
+          <input type="text" id="b_y2" value="$4,750/mo." oninput="updatePreview()">
+        </div>
+      </div>
+      <div class="field-grid cols-3" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Project component</label>
+          <input type="text" id="b_proj_part" value="Project ($1,750)">
+        </div>
+        <div class="field">
+          <label>Support component</label>
+          <input type="text" id="b_support_part" value="Support ($4,750)">
+        </div>
+        <div class="field">
+          <label>Savings vs Option A</label>
+          <input type="text" id="b_discount" value="$4,200 discount from Project original price">
+        </div>
+      </div>
+      <div class="field-grid cols-1">
+        <div class="field">
+          <label>Pricing footnote</label>
+          <input type="text" id="b_footnote" value="Pricing is based on the current environment of 15 to 20 devices. Should the number of devices or users change significantly, monthly costs will be adjusted accordingly. We&#x27;ll always communicate any changes in advance.">
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 Benefits -->
+    <section class="form-section" id="s-benefits">
+      <div class="section-header"><span class="section-num">06</span><span class="section-name">Benefits &amp; CTA</span></div>
+      <div class="field-grid cols-1" style="margin-bottom:14px;">
+        <div class="field">
+          <label>What this gives you (one per line)</label>
+          <textarea id="f_benefits">Immediate risk reduction &#x2014; backups verified Day 1
+Modern, cloud-based infrastructure (MS365 + SharePoint + 1Password + Biz AV)
+Secure on-site/remote work across all devices
+Predictable monthly IT cost &#x2014; no surprises
+GREAT response time and availability!
+Enterprise-grade security without an in-house team
+One point of contact for everything, always</textarea>
+        </div>
+      </div>
+      <div class="field-grid cols-1">
+        <div class="field">
+          <label>CTA closing line</label>
+          <input type="text" id="f_cta" value="Once confirmed, we finalize the scope and timeline and the very first thing we do is get a verified backup running.">
+        </div>
+      </div>
+    </section>
+
+    <!-- Preview -->
+    <section class="form-section" id="s-preview">
+      <div class="section-header"><span class="section-num">&#x2726;</span><span class="section-name">Preview &amp; Generate</span></div>
+      <div class="preview-card">
+        <div class="preview-title">Will appear in PDF as</div>
+        <div class="preview-grid">
+          <div><div class="preview-row"><span class="preview-key">Client</span><span class="preview-val filled" id="pv_client">Mountain Vista Farm</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Date</span><span class="preview-val filled" id="pv_date">April 2026</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Option A Project</span><span class="preview-val filled" id="pv_aproject">$25,200</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Option A Monthly</span><span class="preview-val filled" id="pv_amonthly">$4,750/month</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Option B Year 1</span><span class="preview-val filled" id="pv_by1">$6,000/mo.</span></div></div>
+          <div><div class="preview-row"><span class="preview-key">Option B Year 2+</span><span class="preview-val filled" id="pv_by2">$4,750/mo.</span></div></div>
+        </div>
+      </div>
+      <div style="margin-top:24px;text-align:center;">
+        <button class="btn-gen" style="padding:13px 40px;font-size:15px;" onclick="generatePDF()">&#8595; Generate &amp; Save PDF</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function g(id){ return document.getElementById(id).value.trim(); }
+function lines(id){ return g(id).split('\n').map(s=>s.trim()).filter(Boolean); }
+function setActive(el){ document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
+function updatePreview(){
+  const set=(id,val)=>{ const el=document.getElementById(id); if(!el) return; el.textContent=val||'--'; el.className='preview-val'+(val?' filled':''); };
+  set('pv_client',  g('f_client'));
+  set('pv_date',    g('f_date'));
+  set('pv_aproject',g('a_project'));
+  set('pv_amonthly',g('a_monthly'));
+  set('pv_by1',     g('b_y1'));
+  set('pv_by2',     g('b_y2'));
+}
+function showToast(msg,dur=2800){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),dur); }
+
+['f_client','f_date','a_project','a_monthly','b_y1','b_y2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',updatePreview); });
+
+// ─────────────────────────────────────────────────────────────
+//  PDF GENERATION
+// ─────────────────────────────────────────────────────────────
+function generatePDF(){
+  const client = g('f_client');
+  if(!client){ showToast('Please enter a client name'); return; }
+
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait', unit:'pt', format:'letter'});
+
+  const PW=612, PH=792, ML=40, MR=40, MT=44, MB=40, CW=532;
+
+  // palette
+  const NAVY=[27,58,92], TEAL=[26,82,130], ORANGE=[192,57,43], AMBER=[180,90,0];
+  const RISK_BG=[255,249,240], RISK_BD=[211,100,30];
+  const PH_BG=[235,245,251], PH_BD=[26,82,130];
+  const OA_BG=[240,246,252], OA_BD=[26,82,130];
+  const OB_BG=[253,245,240], OB_BD=[192,57,43];
+  const CTA_BG=[240,246,252];
+  const WHITE=[255,255,255], CARD=[244,244,244], CARD2=[235,235,235];
+  const G1=[30,30,30], G2=[60,60,60], G3=[110,110,110], G4=[160,160,160];
+  const DIV=[210,210,210], GREEN=[26,107,56], BLUE=[26,82,122];
+
+  const sf=c=>doc.setFillColor(c[0],c[1],c[2]);
+  const ss=c=>doc.setDrawColor(c[0],c[1],c[2]);
+  const st=c=>doc.setTextColor(c[0],c[1],c[2]);
+
+  function box(x,y,w,h,fill){ sf(fill); ss(fill); doc.setLineWidth(0); doc.rect(x,y,w,h,'F'); }
+  function bordered(x,y,w,h,fill,stroke,lw){ sf(fill); ss(stroke); doc.setLineWidth(lw); doc.rect(x,y,w,h,'FD'); }
+  function rbox(x,y,w,h,r,fill,stroke,lw){ sf(fill); ss(stroke||fill); doc.setLineWidth(lw||0); doc.roundedRect(x,y,w,h,r,r,stroke?'FD':'F'); }
+  function hline(x,y,w,c,lw){ ss(c); doc.setLineWidth(lw||0.5); doc.line(x,y,x+w,y); }
+  function vline(x,y,h,c,lw){ ss(c); doc.setLineWidth(lw||0.5); doc.line(x,y,x,y+h); }
+
+  function T(x,y,s,sz,color,bold,italic,align){
+    doc.setFont('Helvetica',bold&&italic?'bolditalic':bold?'bold':italic?'italic':'normal');
+    doc.setFontSize(sz); st(color);
+    doc.text(String(s),x,y,{align:align||'left'});
+    return doc.getTextWidth(String(s));
+  }
+  function Tw(x,y,s,sz,color,bold,maxw,lh){
+    doc.setFont('Helvetica',bold?'bold':'normal'); doc.setFontSize(sz); st(color);
+    const ls=doc.splitTextToSize(s,maxw);
+    ls.forEach((l,i)=>doc.text(l,x,y+i*(lh||12)));
+    return ls.length*(lh||12);
+  }
+
+  let curPage=1;
+  function newPage(){ doc.addPage(); curPage++; }
+
+  function footer(n){
+    const fy=PH-MB+8;
+    hline(ML,fy-12,CW,DIV,0.4);
+    const parts=[
+      {s:'CompSF IT Services  |  Cyber Solutions  |  ',b:false},
+      {s:g('f_date')||'2026',b:false},
+      {s:'  |  Page ',b:false},
+      {s:String(n),b:true},
+    ];
+    doc.setFontSize(8);
+    let tw=parts.reduce((a,p)=>{doc.setFont('Helvetica',p.b?'bold':'normal');return a+doc.getTextWidth(p.s);},0);
+    let cx=ML+CW/2-tw/2;
+    parts.forEach(p=>{ doc.setFont('Helvetica',p.b?'bold':'normal'); st(G4); doc.text(p.s,cx,fy); cx+=doc.getTextWidth(p.s); });
+  }
+
+  function pageHeader(pg){
+    T(ML,MT+10,g('f_date')||'',9,G3,false);
+    T(PW/2,MT+10,g('f_proptitle')||'IT Modernization Proposal',11,NAVY,true,false,'center');
+    T(PW/2,MT+22,g('f_subtitle')||client,8.5,G4,false,false,'center');
+    hline(ML,MT+30,CW,DIV,0.5);
+    return MT+46;
+  }
+
+  function sectionHead(x,y,title){
+    T(x,y,title,11,TEAL,true);
+    hline(x,y+4,CW,TEAL,1.0);
+    return y+18;
+  }
+
+  // ── data ──
+  const propDate  = g('f_date')||'April 2026';
+  const propTitle = g('f_proptitle')||'IT Modernization Proposal';
+  const subLabel  = g('f_subtitle')||(client+' • Confidential');
+  const tagline   = g('f_tagline');
+  const risks     = [g('f_risk1'),g('f_risk2'),g('f_risk3')].filter(Boolean);
+  const riskNote  = g('f_riskfooter');
+  const ph1       = lines('f_phase1');
+  const ph2       = lines('f_phase2');
+  const aProj     = g('a_project'), aMo=g('a_monthly'), aDevs=g('a_devices'), aRate=g('a_rate');
+  const aHwRange  = g('a_hw_range'), aHwDesc=g('a_hw_desc');
+  const aFT       = g('a_fin_total'), aF12=g('a_fin_12'), aF24=g('a_fin_24'), aF36=g('a_fin_36');
+  const bY1=g('b_y1'), bY2=g('b_y2'), bPP=g('b_proj_part'), bSP=g('b_support_part'), bDisc=g('b_discount'), bNote=g('b_footnote');
+  const bens      = lines('f_benefits');
+  const ctaLine   = g('f_cta');
+
+  // ══════════════════════════════════════════════════════
+  //  PAGE 1 — cover + risks + phases
+  // ══════════════════════════════════════════════════════
+  let y = MT;
+
+  // logo top-right
+  doc.setFont('Helvetica','bold'); doc.setFontSize(20); st(NAVY);
+  const cw=doc.getTextWidth('Comp'); doc.text('Comp',PW-MR-106,y+22); st(ORANGE); doc.text('SF',PW-MR-106+cw,y+22);
+  doc.setFont('Helvetica','normal'); doc.setFontSize(7.5); st(G3); doc.text('IT & CYBER SECURITY SOLUTIONS',PW-MR-106,y+34);
+
+  // date top-left
+  T(ML,y+14,propDate,9,G3,false);
+
+  // title centred
+  T(PW/2,y+26,propTitle,20,NAVY,true,false,'center');
+  T(PW/2,y+40,subLabel,10,G3,false,false,'center');
+  y+=52; hline(ML,y,CW,DIV,0.5); y+=12;
+
+  // client block (dark navy)
+  const cbH = tagline ? 66 : 52;
+  box(ML,y,CW,cbH,NAVY);
+  T(ML+16,y+22,client,20,WHITE,true);
+  T(ML+16,y+36,propTitle,10,[180,200,220],false);
+  if(tagline){ T(ML+16,y+50,tagline,9,[160,190,210],false,true); }
+  y+=cbH+18;
+
+  // where things stand
+  y=sectionHead(ML,y,'WHERE THINGS STAND TODAY'); y+=4;
+
+  // risk box — measure height first
+  let rh=20;
+  risks.forEach(r=>{ rh+=doc.setFontSize(9)||0; rh+=doc.splitTextToSize(r,CW-30).length*12+4; });
+  if(riskNote){ doc.setFontSize(8.5); rh+=doc.splitTextToSize(riskNote,CW-30).length*11+8; }
+  rh+=14;
+  rbox(ML,y,CW,rh,3,RISK_BG,RISK_BD,1.2);
+  let ry=y+15;
+  T(ML+12,ry,'⚠  '+risks.length+' Critical Risks Identified',10,AMBER,true); ry+=15;
+  risks.forEach(r=>{
+    doc.setFont('Helvetica','normal'); doc.setFontSize(9); st(G2);
+    doc.text('•',ML+12,ry);
+    const ls=doc.splitTextToSize(r,CW-32); ls.forEach((l,i)=>doc.text(l,ML+22,ry+i*12)); ry+=ls.length*12+3;
+  });
+  if(riskNote){ ry+=4; doc.setFont('Helvetica','italic'); doc.setFontSize(8.5); st(G3); const ls=doc.splitTextToSize(riskNote,CW-28); ls.forEach(l=>{doc.text(l,ML+12,ry);ry+=11;}); }
+  y+=rh+16;
+
+  // what we're proposing
+  y=sectionHead(ML,y,"WHAT WE'RE PROPOSING"); y+=4;
+  const intro="We handle everything — from the first backup to the last device setup — so you get a modern, secure, fully managed IT environment without the headache of coordinating vendors or worrying about what’s next.";
+  doc.setFont('Helvetica','normal'); doc.setFontSize(9.5); st(G2);
+  const iLines=doc.splitTextToSize(intro,CW); iLines.forEach(l=>{doc.text(l,ML,y);y+=13;}); y+=6;
+
+  // phase columns
+  const hW=(CW-10)/2;
+  function phaseBoxH(items){ let h=16+14+12; items.forEach(it=>{ h+=doc.splitTextToSize(it,hW-22).length*12+2; }); return h+10; }
+  const ph1H=phaseBoxH(ph1), ph2H=phaseBoxH(ph2), phH=Math.max(ph1H,ph2H);
+
+  rbox(ML,y,hW,phH,3,PH_BG,PH_BD,0.8);
+  let p1y=y+14; T(ML+10,p1y,'Phase 1 — Onboarding Project',10,TEAL,true); p1y+=13;
+  T(ML+10,p1y,'Everything that gets you stabilized and secure',8.5,G3,false,true); p1y+=13;
+  ph1.forEach(it=>{ doc.setFont('Helvetica','normal'); doc.setFontSize(9); st(G2); doc.text('•',ML+10,p1y); const ls=doc.splitTextToSize(it,hW-22); ls.forEach((l,i)=>doc.text(l,ML+18,p1y+i*12)); p1y+=ls.length*12+2; });
+
+  const p2x=ML+hW+10;
+  rbox(p2x,y,hW,phH,3,PH_BG,PH_BD,0.8);
+  let p2y=y+14; T(p2x+10,p2y,'Phase 2 — Ongoing Managed IT Support',10,TEAL,true); p2y+=13;
+  T(p2x+10,p2y,'Everything that keeps you running securely every month',8.5,G3,false,true); p2y+=13;
+  ph2.forEach(it=>{ doc.setFont('Helvetica','normal'); doc.setFontSize(9); st(G2); doc.text('•',p2x+10,p2y); const ls=doc.splitTextToSize(it,hW-22); ls.forEach((l,i)=>doc.text(l,p2x+18,p2y+i*12)); p2y+=ls.length*12+2; });
+
+  footer(1);
+
+  // ══════════════════════════════════════════════════════
+  //  PAGE 2 — YOUR INVESTMENT
+  // ══════════════════════════════════════════════════════
+  newPage(); y=pageHeader(2); y+=4;
+  y=sectionHead(ML,y,'YOUR INVESTMENT'); y+=4;
+  doc.setFont('Helvetica','normal'); doc.setFontSize(9.5); st(G2);
+  doc.text("We’ve structured this so you have flexibility. Here are your two options:",ML,y); y+=18;
+
+  // Option A
+  const aRows=[
+    ['Onboarding Project (one-time)',                   aProj,   NAVY, true],
+    ['Managed Ongoing IT & Cyber Services: '+aDevs,     aMo,     NAVY, true],
+    [aRate,                                             '',      G3,   false],
+    ['Hardware: '+aHwDesc,                              aHwRange,G2,   true],
+  ];
+  const ROW=20;
+  const aBoxH=22+aRows.length*ROW+6+14+4*13+14;
+  rbox(ML,y,CW,aBoxH,4,OA_BG,OA_BD,1.0);
+  let ay=y+16;
+  T(ML+14,ay,'Option A  |  Upfront Project + Monthly Support',11,TEAL,true); ay+=18;
+  aRows.forEach(([lbl,val,vc,show])=>{
+    hline(ML+8,ay-12,CW-16,DIV,0.3);
+    doc.setFont('Helvetica','normal'); doc.setFontSize(9.5); st(G2); doc.text(lbl,ML+14,ay);
+    if(val&&show){ doc.setFont('Helvetica','bold'); st(vc); doc.text(val,ML+CW-14,ay,{align:'right'}); }
+    ay+=ROW;
+  });
+  ay+=4;
+  doc.setFont('Helvetica','bold'); doc.setFontSize(8.5); st(ORANGE); doc.text('Hardware financing available through Dell or Lenovo:',ML+14,ay); ay+=13;
+  [[`Example: Total Hardware financed: ${aFT}`,''],[`12 months`,aF12],[`24 months`,aF24],[`36 months`,aF36]].forEach(([lbl,val],i)=>{
+    doc.setFont('Helvetica',i===0?'bold':'italic'); doc.setFontSize(8.5); st(i===0?G2:G3);
+    doc.text(lbl,ML+14,ay);
+    if(val){ doc.setFont('Helvetica','italic'); st(G3); doc.text(val,ML+170,ay); }
+    ay+=13;
+  });
+  y+=aBoxH+14;
+
+  // Option B
+  const halfB=(CW-28)/2;
+  const yrH=58;
+  const bBoxH=22+14+16+yrH+14+(bDisc?18:0)+(bNote?doc.splitTextToSize(bNote,CW-30).length*11+14:0)+14;
+  rbox(ML,y,CW,bBoxH,4,OB_BG,OB_BD,1.5);
+  let by=y+16;
+  T(ML+14,by,'✦  Option B  |  Bundled Monthly Plan',11,ORANGE,true);
+  doc.setFont('Helvetica','bold'); doc.setFontSize(9); st([220,100,80]); doc.text('Cheaper!',ML+14+doc.getTextWidth('✦  Option B  |  Bundled Monthly Plan  '),by);
+  by+=13;
+  T(ML+14,by,'Project cost spread across Year 1 — one simple monthly number, no large upfront check.',8.5,G3,false,true); by+=16;
+
+  // year columns
+  rbox(ML+14,by,halfB,yrH,3,[240,250,255],OA_BD,0.8);
+  rbox(ML+14+halfB+8,by,halfB,yrH,3,[240,250,255],OA_BD,0.8);
+  const yr1x=ML+14, yr2x=ML+14+halfB+8;
+  T(yr1x+10,by+14,'Year 1',10,NAVY,true); T(yr2x+10,by+14,'Year 2+',10,NAVY,true);
+  doc.setFont('Helvetica','italic'); doc.setFontSize(8); st(G3);
+  doc.text('Onboarding Project + Ongoing IT & Cyber Services bundle',yr1x+10,by+26);
+  doc.text('Ongoing IT & Cyber Services only',yr2x+10,by+26);
+  T(yr1x+10,by+46,bY1,20,ORANGE,true); T(yr2x+10,by+46,bY2,20,NAVY,true);
+  doc.setFont('Helvetica','normal'); doc.setFontSize(8.5); st(G3);
+  doc.text(bPP+(bSP?' + '+bSP:''),yr1x+10,by+yrH-6);
+  doc.text('Ongoing managed IT — may decrease',yr2x+10,by+yrH-6);
+  by+=yrH+8;
+
+  if(bDisc){ box(ML+14,by,CW-28,18,[255,235,220]); T(ML+CW/2,by+12,bDisc,9,ORANGE,true,false,'center'); by+=22; }
+  if(bNote){ by+=4; doc.setFont('Helvetica','italic'); doc.setFontSize(8.5); st(G3); const ls=doc.splitTextToSize(bNote,CW-30); ls.forEach(l=>{doc.text(l,ML+14,by);by+=11;}); }
+  doc.setFont('Helvetica','italic'); doc.setFontSize(8.5); st(G3);
+  doc.text('Hardware is separate and client-owned — financed directly through Dell or Lenovo if preferred.',ML+14,by);
+
+  footer(2);
+
+  // ══════════════════════════════════════════════════════
+  //  PAGE 3 — Benefits + CTA
+  // ══════════════════════════════════════════════════════
+  newPage(); y=pageHeader(3); y+=4;
+
+  // What this gives you
+  y=sectionHead(ML,y,'WHAT THIS GIVES YOU'); y+=8;
+  const half2=(CW-16)/2, mid=Math.ceil(bens.length/2);
+  const leftB=bens.slice(0,mid), rightB=bens.slice(mid);
+  let ly=y, ry2=y;
+  leftB.forEach(b=>{ doc.setFont('Helvetica','normal'); doc.setFontSize(9.5); st(GREEN); doc.text('✓',ML,ly+1); st(G2); const ls=doc.splitTextToSize(b,half2-14); ls.forEach((l,i)=>doc.text(l,ML+12,ly+i*12)); ly+=ls.length*12+4; });
+  rightB.forEach(b=>{ doc.setFont('Helvetica','normal'); doc.setFontSize(9.5); st(GREEN); doc.text('✓',ML+half2+16,ry2+1); st(G2); const ls=doc.splitTextToSize(b,half2-14); ls.forEach((l,i)=>doc.text(l,ML+half2+28,ry2+i*12)); ry2+=ls.length*12+4; });
+  y+=Math.max(ly-y,ry2-y)+20;
+
+  // Ready to move forward
+  y=sectionHead(ML,y,'READY TO MOVE FORWARD?'); y+=8;
+  const ctaBoxH=100+(ctaLine?24:0);
+  rbox(ML,y,CW,ctaBoxH,4,CTA_BG,OA_BD,0.8);
+  let cy=y+16;
+  T(ML+14,cy,'Just let us know which option works for you:',10,TEAL,true); cy+=16;
+  [['Option A',' — Upfront project + ongoing monthly support'],['Option B',' — Bundled monthly plan (recommended) – Cheaper deal!']].forEach(([bold,rest])=>{
+    doc.setFont('Helvetica','normal'); doc.setFontSize(9.5); st(G2); doc.text('•',ML+14,cy);
+    doc.setFont('Helvetica','bold'); st(NAVY); const bw=doc.getTextWidth(bold); doc.text(bold,ML+22,cy);
+    doc.setFont('Helvetica','normal'); st(G2); doc.text(rest,ML+22+bw,cy);
+    cy+=16;
+  });
+  if(ctaLine){ cy+=4; doc.setFont('Helvetica','normal'); doc.setFontSize(9); st(G2); const ls=doc.splitTextToSize(ctaLine,CW-32); ls.forEach(l=>{doc.text(l,ML+14,cy);cy+=13;}); }
+  y+=ctaBoxH+18;
+
+  // Signature block
+  const sigH=70;
+  box(ML,y,CW,sigH,CARD); box(ML,y,4,sigH,NAVY);
+  T(ML+16,y+18,'Shahar Geva  |  Founder & CEO',11,NAVY,true);
+  T(ML+16,y+32,'CompSF IT & Cyber Security Solutions',9.5,ORANGE,false);
+  T(ML+16,y+44,'compsf.com  ·  548 Market St, San Francisco CA 94104  ·  415-864-6168',8.5,G3,false);
+  hline(ML+10,y+52,CW-20,DIV,0.4);
+  T(ML+16,y+63,'Signature: _________________________________',9,G3,false);
+  T(ML+CW-130,y+63,'Date: _______________',9,G3,false);
+
+  footer(3);
+
+  // save
+  const safe=client.replace(/[^a-zA-Z0-9]/g,'_').substring(0,30);
+  doc.save('CompSF_Proposal_'+safe+'_'+(g('f_date')||'').replace(/\s+/g,'_')+'.pdf');
+  showToast('✓ PDF saved successfully');
+}
+</script>
+</body>
+</html>
