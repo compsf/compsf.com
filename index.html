@@ -122,10 +122,12 @@
     }
     .hero-inner {
       position: relative; width: 100%;
-      display: grid; grid-template-columns: 1fr auto;
-      gap: 60px; align-items: center;
       max-width: 1200px; margin: 0 auto;
     }
+    .hero-mid {
+      display: flex; align-items: stretch; gap: 60px; margin-bottom: 50px;
+    }
+    .hero-text-group { flex: 1; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(224,112,32,0.15); border: 1px solid rgba(224,112,32,0.35);
@@ -150,7 +152,7 @@
       font-size: 1.05rem; color: rgba(255,255,255,0.65);
       line-height: 1.75; margin-bottom: 36px; max-width: 520px;
     }
-    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 50px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
     .btn-primary {
       background: var(--orange); color: #fff; padding: 13px 30px;
       border-radius: 7px; font-weight: 600; font-size: 0.92rem;
@@ -171,22 +173,22 @@
     .btn-outline-white:active { background: rgba(255,255,255,0.14); transform: translateY(0); }
     .btn-outline-white:focus-visible { outline: 3px solid rgba(255,255,255,0.6); outline-offset: 3px; }
     .hero-stats {
-      display: flex; gap: 36px; flex-wrap: wrap;
-      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 28px;
+      display: flex; gap: 36px; flex-wrap: wrap; justify-content: center;
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px;
     }
     .stat-number {
       font-family: 'WildanCar', 'Inter', sans-serif;
-      font-size: 2.1rem; font-weight: 700; color: var(--orange); line-height: 1;
+      font-size: clamp(2rem, 2.8vw, 2.8rem); font-weight: 700; color: var(--orange); line-height: 1;
     }
     .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+    .stat-item { text-align: center; }
 
     /* Hero video */
-    .hero-video-wrap { position: relative; flex-shrink: 0; width: 560px; }
+    .hero-video-wrap { position: relative; flex-shrink: 0; width: 640px; }
     .hero-video-frame {
-      width: 100%; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden;
+      position: absolute; inset: 0; border-radius: 16px; overflow: hidden;
       border: 2px solid rgba(224,112,32,0.5);
-      box-shadow: 0 0 0 8px rgba(224,112,32,0.08), 0 20px 50px rgba(0,0,0,0.5);
-      background: #000; position: relative;
+      background: #000;
     }
     .hero-video-frame video { width:100%; height:100%; object-fit:cover; display:block; }
 
@@ -505,7 +507,7 @@
     @media (max-width:1100px) {
       .team-grid { grid-template-columns:repeat(2,1fr); }
       .retainer-grid { grid-template-columns:repeat(2,1fr); }
-      .hero-video-wrap { width:420px; }
+      .hero-video-wrap { width:460px; }
     }
     @media (max-width:900px) {
       .services-grid { grid-template-columns:1fr 1fr; }
@@ -513,8 +515,9 @@
       .about-grid { grid-template-columns:1fr; }
       .retainer-intro { grid-template-columns:1fr; gap:30px; }
       .contact-wrap { grid-template-columns:1fr; gap:40px; }
-      .hero-inner { grid-template-columns:1fr; }
-      .hero-video-wrap { display:block; width:100%; max-width:100%; }
+      .hero-mid { flex-direction: column; margin-bottom: 40px; }
+      .hero-video-wrap { width:100%; max-width:100%; aspect-ratio: 16/9; }
+      .hero-video-frame { position: relative; inset: auto; }
     }
     @media (max-width:660px) {
       .services-grid { grid-template-columns:1fr; }
@@ -598,42 +601,46 @@
   <div class="hero-inner">
     <div class="hero-content">
       <div class="hero-badge">&#9679; San Francisco &middot; Bay Area &middot; US</div>
-      <h1 class="hero-title">
-        Simple, Powerful<br><span class="line-orange">IT &amp; Cybersecurity</span><br><span class="line-red">for Growing Businesses</span>
-      </h1>
-      <p class="hero-subtitle">
-        We protect your business from modern threats, keep your systems running smoothly, and take the stress off your plate.<br>
-        Real people. Fast response. No jargon.<br>
-        Security that actually works.
-      </p>
-      <div class="hero-actions">
-        <a href="#retainer" class="btn-primary">Monthly Managed IT &#8594;</a>
-        <a href="#contact" class="btn-outline-white">&#128222; Free Consultation</a>
+      <div class="hero-mid">
+        <div class="hero-text-group">
+          <h1 class="hero-title">
+            Simple, Powerful<br><span class="line-orange">IT &amp; Cybersecurity</span><br><span class="line-red">for Growing Businesses</span>
+          </h1>
+          <p class="hero-subtitle">
+            We protect your business from modern threats, keep your systems running smoothly, and take the stress off your plate.<br>
+            Real people. Fast response. No jargon.<br>
+            Security that actually works.
+          </p>
+          <div class="hero-actions">
+            <a href="#retainer" class="btn-primary">Monthly Managed IT &#8594;</a>
+            <a href="#contact" class="btn-outline-white"><span style="position:relative;left:-2mm;">&#128222;</span> Free Consultation</a>
+          </div>
+        </div>
+        <!-- Hero video -->
+        <div class="hero-video-wrap">
+          <div class="hero-video-frame">
+            <video id="heroVideo" src="Homepage-CompSF-Video_v2.mp4" muted playsinline preload="auto" poster="Homepage-Video-Poster.png"></video>
+            <div class="video-click-overlay" onclick="togglePlay()">
+              <div class="video-click-icon" id="heroClickIcon"></div>
+            </div>
+            <div class="video-controls">
+              <button class="vc-btn" onclick="videoRewind()" title="Restart">&#8635;</button>
+              <button class="vc-btn" id="playBtn" onclick="togglePlay()" title="Play/Pause">&#10074;&#10074;</button>
+              <div class="vc-progress" id="vcProgress" onclick="videoSeek(event)">
+                <div class="vc-progress-fill" id="vcFill"></div>
+              </div>
+              <button class="vc-btn" id="muteBtn" onclick="toggleMute()" title="Sound">&#128264;</button>
+              <button class="vc-btn" id="fsBtn" onclick="toggleFullscreen()" title="Fullscreen">&#x26F6;</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="hero-stats">
-        <div class="stat-item"><div class="stat-number">2003</div><div class="stat-label">Supporting Businesses Since</div></div>
-        <div class="stat-item"><div class="stat-number">200+</div><div class="stat-label">Clients Supported</div></div>
-        <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Monitoring</div></div>
-        <div class="stat-item"><div class="stat-number">99.9%</div><div class="stat-label">Uptime Delivered</div></div>
-      </div>
-    </div>
-
-    <!-- Hero video -->
-    <div class="hero-video-wrap">
-      <div class="hero-video-frame">
-        <video id="heroVideo" src="Homepage-CompSF-Video_v2.mp4" muted playsinline loop preload="auto" poster="Homepage-Video-Poster.png"></video>
-        <div class="video-click-overlay" onclick="togglePlay()">
-          <div class="video-click-icon" id="heroClickIcon"></div>
-        </div>
-        <div class="video-controls">
-          <button class="vc-btn" onclick="videoRewind()" title="Restart">&#8635;</button>
-          <button class="vc-btn" id="playBtn" onclick="togglePlay()" title="Play/Pause">&#10074;&#10074;</button>
-          <div class="vc-progress" id="vcProgress" onclick="videoSeek(event)">
-            <div class="vc-progress-fill" id="vcFill"></div>
-          </div>
-          <button class="vc-btn" id="muteBtn" onclick="toggleMute()" title="Sound">&#128264;</button>
-          <button class="vc-btn" id="fsBtn" onclick="toggleFullscreen()" title="Fullscreen">&#x26F6;</button>
-        </div>
+        <div class="stat-item"><div class="stat-number" data-stat="year">2003</div><div class="stat-label">Supporting Businesses Since</div></div>
+        <div class="stat-item"><div class="stat-number" data-stat="response">&lt; 2hr</div><div class="stat-label">Avg. Response Time</div></div>
+        <div class="stat-item"><div class="stat-number" data-stat="clients">200+</div><div class="stat-label">Clients Supported</div></div>
+        <div class="stat-item"><div class="stat-number" data-stat="monitor">24/7</div><div class="stat-label">Monitoring</div></div>
+        <div class="stat-item"><div class="stat-number" data-stat="uptime">99.9%</div><div class="stat-label">Uptime Delivered</div></div>
       </div>
     </div>
   </div>
@@ -1176,16 +1183,25 @@
   // Hero video controls
   const heroVideo = document.getElementById('heroVideo');
 
-  // Start video after 2s delay (shows poster/logo during wait)
+  // Start video after 5s delay, then 10s pause between loops
   let _videoStarted = false;
   function _startHeroVideo() {
     if (_videoStarted) return;
     _videoStarted = true;
-    setTimeout(() => heroVideo.play().catch(() => {}), 2000);
+    setTimeout(() => heroVideo.play().catch(() => {}), 5000);
   }
   _startHeroVideo();
 
-  // Mobile fallback: play when video scrolls into view (also respects 2s delay)
+  heroVideo.addEventListener('ended', () => {
+    document.getElementById('playBtn').innerHTML = '&#9654;';
+    setTimeout(() => {
+      heroVideo.currentTime = 0;
+      heroVideo.play().catch(() => {});
+      document.getElementById('playBtn').innerHTML = '&#10074;&#10074;';
+    }, 10000);
+  });
+
+  // Mobile fallback: play when video scrolls into view
   const _heroObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) _startHeroVideo();
@@ -1338,6 +1354,43 @@
       setTimeout(() => { btn.textContent = 'Send Message →'; btn.style.background = ''; }, 4000);
     }
   }
+
+  // Stats counter animation
+  (function() {
+    const statsEl = document.querySelector('.hero-stats');
+    if (!statsEl) return;
+    let animated = false;
+
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function animateCounter(el, from, to, duration, format) {
+      const start = performance.now();
+      (function tick(now) {
+        const p = Math.min((now - start) / duration, 1);
+        el.textContent = format(from + (to - from) * easeOut(p), p >= 1);
+        if (p < 1) requestAnimationFrame(tick);
+      })(performance.now());
+    }
+
+    function runStats() {
+      if (animated) return;
+      animated = true;
+      const currentYear = new Date().getFullYear();
+      const y = statsEl.querySelector('[data-stat="year"]');
+      const c = statsEl.querySelector('[data-stat="clients"]');
+      const m = statsEl.querySelector('[data-stat="monitor"]');
+      const u = statsEl.querySelector('[data-stat="uptime"]');
+      const r = statsEl.querySelector('[data-stat="response"]');
+      if (y) animateCounter(y, currentYear, 2003, 2200, (v) => String(Math.round(v)));
+      if (r) animateCounter(r, 24, 2, 1800, (v) => '< ' + Math.round(v) + 'hr');
+      if (c) animateCounter(c, 1, 200, 1800, (v, done) => Math.round(v) + (done ? '+' : ''));
+      if (m) animateCounter(m, 1, 24, 1600, (v) => Math.round(v) + '/7');
+      if (u) animateCounter(u, 0, 99.9, 2000, (v, done) => (done ? '99.9' : v.toFixed(1)) + '%');
+    }
+
+    const obs = new IntersectionObserver((entries) => { if (entries[0].isIntersecting) runStats(); }, { threshold: 0.4 });
+    obs.observe(statsEl);
+  })();
 </script>
 
 <!-- Google Reviews -->

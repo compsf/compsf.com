@@ -1,20 +1,13 @@
-
-<style>
-  .md-wrap { font-family: var(--font-mono); font-size: 13px; line-height: 1.6; color: var(--color-text-primary); background: var(--color-background-secondary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 1.5rem; white-space: pre-wrap; word-break: break-word; position: relative; }
-  .copy-btn { position: absolute; top: 1rem; right: 1rem; font-family: var(--font-sans); font-size: 12px; padding: 4px 12px; background: transparent; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); cursor: pointer; color: var(--color-text-secondary); }
-  .copy-btn:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
-</style>
-<div style="padding: 0.5rem 0;">
-  <div class="md-wrap" id="mdblock">
-    <button class="copy-btn" onclick="copyMd()">Copy</button>
-    <span id="mdtext"># CLAUDE.md — CompSF IT &amp; Cyber Solutions Website
+# CLAUDE.md — CompSF IT & Cyber Solutions Website
 
 ## Project Overview
-- **Business:** CompSF IT &amp; Cyber Solutions
-- **Site type:** IT Services &amp; Cybersecurity business website
-- **Pages:** Home / Landing, Services, About, Contact
-- **Tone &amp; feel:** Friendly, approachable, trustworthy — warm tech energy, not cold corporate
-- **Audience:** Small-to-mid businesses seeking IT support and cyber protection in the SF Bay Area
+- **Business:** CompSF IT & Cyber Solutions
+- **Domain:** compsf.com
+- **Repo:** https://github.com/compsf/compsf.com (branch: main)
+- **Hosting:** GitHub Pages — push to main = live in ~1–2 min
+- **Site type:** IT Services & Cybersecurity business website (SF Bay Area)
+- **Tone:** Friendly, approachable, warm tech energy — not cold corporate
+- **Audience:** Small-to-mid businesses seeking IT support and cyber protection
 
 ---
 
@@ -23,90 +16,131 @@
 
 ---
 
-## Brand Assets
-- Always check the `brand_assets/` folder before designing.
-- It may contain: logo, color palette, style guide, photography, icons.
-- If assets exist, **use them** — do not use placeholders where real assets are available.
-- If a logo is present, use it in the header and footer.
-- If a color palette is defined, use those exact values — do not invent brand colors.
-- If no color palette is found, derive a warm-but-professional custom palette — avoid default Tailwind colors entirely.
+## Brand Colors (exact tokens — use these, never invent)
+```
+--black:        #1c1c1c
+--charcoal:     #2d2d2d
+--orange:       #e07020   ← primary CTA color
+--blood-orange: #bf3500   ← hover states, accents
+--sf-red:       #9b1520
+--white:        #ffffff
+--off-white:    #f8f8f8
+--light-grey:   #f2f2f2
+--border:       #e0e0e0
+--text-muted:   #666666
+--text-light:   #999999
+```
+
+## Typography
+- **Headings:** `WildanCar` (file: `Wildan carFont - Adegoke.ttf` in project root & `brand_assets/`)
+- **Body:** `Inter`, sans-serif
+- Heading tracking: `-0.03em` on large headings; body line-height: `1.7`
+- Never use the same font for headings and body
 
 ---
 
-## Page Structure
+## Key Files
+- `index.html` — single-file site (~77KB), all styles inline, Tailwind via CDN
+- `serve.mjs` — local dev server (port 3000)
+- `screenshot.mjs` — Puppeteer screenshots → `./temporary screenshots/`
+- `brand_assets/` — logos, style guide, custom font, photography
+- `thank-you.html` — form submission success page
+- `404.html` — custom 404
+- `og-image.html` / `og-image.png` — social share image
+- `CompSF_Quote_Generator.html` — standalone internal tool
+- `email-signature.html`, `shahar-signature-standalone.html`, `dareyl-signature-standalone.html`
+- `internal/` — internal tools (not part of public site)
 
-### Home / Landing
-- Hero with headline, subheadline, and a clear CTA ("Get a Free Consultation" or similar)
-- Brief value proposition (3 pillars: e.g. Fast Response, Friendly Support, Secure Systems)
-- Services preview (3–4 cards linking to Services page)
-- Trust indicators (years in business, clients served, certifications, testimonials)
-- Final CTA section
-
-### Services
-- Intro headline and short paragraph
-- Service cards (each with icon, title, short description)
-- Include categories such as: IT Support, Cybersecurity, Network Setup, Cloud Solutions, Managed Services
-- CTA at the bottom of the page
-
-### About
-- Company story / mission statement
-- Team section (photos or illustrated avatars with names/roles)
-- Values section (friendly, local, expert)
-- CTA to Contact
-
-### Contact
-- Contact form (Name, Email, Phone, Message, Submit)
-- Business address, phone, email
-- Optional: embedded map or service area note (SF Bay Area)
-- Response time expectation copy ("We respond within 1 business day")
+## Sub-pages (each has its own folder with index.html)
+- `about/` and `about-us/` — About page
+- `services/` and `what-we-do/` — Services page
+- `contact/` and `contact-us/` — Contact page
 
 ---
 
-## Reference Images
-- If a reference image is provided: match layout, spacing, typography, and color exactly. Use placeholder content only where real assets are absent.
-- If no reference image: design from scratch with high craft (see guardrails below).
-- Screenshot output, compare against reference, fix mismatches, re-screenshot. Do at least 2 comparison rounds. Stop only when no visible differences remain or user confirms.
+## Team Members (with photo filenames)
+| Name | Role | Photo file |
+|------|------|------------|
+| Shahar Geva | Founder & CEO | `Shahar-ProPic.jpg` |
+| Tommy R. | Helpdesk & Support Lead | `Tommy.jpg` |
+| David Kim | Systems & Automation Engineer | `David.Kim.png` |
+| Sarah Chen | Cloud Solutions Specialist | `Sarah.C.png` |
+| Avi G. | Cybersecurity & Special Projects Advisor | `Avi.Gold.png` |
+| Nissim Buzaglo | Senior Web Developer | `Nissim.B.png` |
 
 ---
 
-## Local Server
-- **Always serve on localhost** — never screenshot a `file:///` URL.
-- Start the dev server: `node serve.mjs` (serves the project root at `http://localhost:3000`)
-- `serve.mjs` lives in the project root. Start it in the background before taking any screenshots.
-- If the server is already running, do not start a second instance.
+## Contact & Business Info
+- **Address:** 548 Market Street, San Francisco CA 94104
+- **Service area:** SF Bay Area (on-site + remote)
+- **Hours:** Mon–Fri 9am–5pm
 
 ---
+
+## Logo Files (in root and brand_assets/)
+- `Logo_CompSF_wTagline_Color_01_RGB.png` — primary color logo
+- `Logo_CompSF_wTagline_Color_02_RGB.png` — alternate color
+- `Logo_CompSF_wTagline_White_02_RGB.png` — white (for dark backgrounds)
+- `Logo_CompSF_wTagline_Black_02_RGB.png` — black (for light backgrounds)
+- `CompSF Image Logo.png` — image-only logo (no tagline)
+- `compsf-logo-v3.png` — latest logo version
+- `CompSF-single-LOGO symbol.jpg` — symbol only
+
+---
+
+## Hero Video
+- Primary: `Homepage-CompSF-Video_v2.mp4`
+- Poster: `Homepage-Video-Poster.png`
+- Mobile: `display:block; width:100%` (never `display:none` at mobile breakpoints)
+- Add `preload="auto"` + IntersectionObserver fallback for mobile autoplay
+
+---
+
+## Google Reviews (live slider)
+- **API Key:** `AIzaSyCmqX39_2MSwPE-1j72wiV7GIprUQYJzlg` (restricted to compsf.com — won't work on localhost)
+- **Place ID:** `ChIJf9p5e2KAhYAR1gVravhN_to`
+- **Use:** legacy `google.maps.places.PlacesService.getDetails()` — returns `review.text` as a plain string
+- **Do NOT use:** new Places JS library (`Place.fetchFields`) — silently drops review text
+- **Do NOT use:** REST API `fetch()` — fails due to CORS on GitHub Pages
+- Sort: written text + non-Hebrew first → written text + Hebrew second → star-only excluded
+- Hebrew names detected with `/[֐-׿]/`; no-photo Hebrew reviewers get a generic SVG icon
+- Slider: prev/next buttons, auto-scrolls every 5s, pauses on hover, responsive (3/2/1 cards)
+
+---
+
+## Local Dev Server
+- Start: `node serve.mjs` (serves project root at `http://localhost:3000`)
+- Always start before taking screenshots
+- Never screenshot a `file:///` URL
 
 ## Screenshot Workflow
-- Puppeteer is installed — update path to match your local machine before first use.
-- **Always screenshot from localhost:** `node screenshot.mjs http://localhost:3000`
-- Screenshots auto-save to `./temporary screenshots/screenshot-N.png` (never overwritten).
-- Optional label: `node screenshot.mjs http://localhost:3000 label`
-- After screenshotting, read the PNG with the Read tool and analyze it directly.
-- Be specific in comparisons: "heading is 32px but reference shows ~24px", "card gap is 16px but should be 24px"
-- Check: spacing/padding, font size/weight/line-height, colors (exact hex), alignment, border-radius, shadows, image sizing
+- Command: `node screenshot.mjs http://localhost:3000 label`
+- Screenshots auto-save to `./temporary screenshots/` (never overwritten)
+- After screenshotting, read the PNG with the Read tool and analyze directly
+- Check: spacing/padding, font size/weight, colors (exact hex), alignment, border-radius, shadows, image sizing
+- Do at least 2 comparison rounds; stop only when no visible differences remain
 
 ---
 
 ## Output Defaults
-- Single `index.html` file per page, all styles inline, unless instructed otherwise
-- Tailwind CSS via CDN: `&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;`
+- Single `index.html` per page, all styles inline, unless told otherwise
+- Tailwind CSS via CDN: `<script src="https://cdn.tailwindcss.com"></script>`
 - Placeholder images: `https://placehold.co/WIDTHxHEIGHT`
 - Mobile-first responsive
 
 ---
 
 ## Anti-Generic Guardrails
-- **Colors:** Never use default Tailwind palette (indigo-500, blue-600, etc.). Use brand colors from `brand_assets/` or derive a custom palette.
-- **Shadows:** Never flat `shadow-md`. Use layered, color-tinted shadows with low opacity.
-- **Typography:** Never use the same font for headings and body. Pair a display/serif with a clean sans. Apply tight tracking (`-0.03em`) on large headings, generous line-height (`1.7`) on body.
-- **Gradients:** Layer multiple radial gradients. Add grain/texture via SVG noise filter for depth.
-- **Animations:** Only animate `transform` and `opacity`. Never `transition-all`. Use spring-style easing.
-- **Interactive states:** Every clickable element needs hover, focus-visible, and active states. No exceptions.
-- **Images:** Add a gradient overlay (`bg-gradient-to-t from-black/60`) and a color treatment layer with `mix-blend-multiply`.
-- **Spacing:** Use intentional, consistent spacing tokens — not random Tailwind steps.
-- **Depth:** Surfaces should have a layering system (base → elevated → floating) — not all at the same z-plane.
-- **Friendly tone in copy:** Avoid jargon-heavy headlines. Write like a helpful neighbor, not a sales brochure.
+- **Colors:** Use the token list above. Never use default Tailwind palette (indigo-500, blue-600, etc.)
+- **Shadows:** Never flat `shadow-md`. Use layered, color-tinted shadows with low opacity
+- **Typography:** WildanCar headings + Inter body — never swap or mix up
+- **Gradients:** Layer multiple radial gradients. Add grain/texture via SVG noise filter for depth
+- **Animations:** Only animate `transform` and `opacity`. Never `transition-all`. Use spring-style easing
+- **Interactive states:** Every clickable element needs hover, focus-visible, and active states
+- **Images:** Add gradient overlay (`bg-gradient-to-t from-black/60`) and color treatment with `mix-blend-multiply`
+- **Spacing:** Intentional, consistent spacing tokens — not random Tailwind steps
+- **Depth:** Surfaces should layer (base → elevated → floating) — not all at same z-plane
+- **Copy tone:** Write like a helpful neighbor, not a sales brochure. No jargon-heavy headlines
 
 ---
 
@@ -116,16 +150,10 @@
 - Do not stop after one screenshot pass
 - Do not use `transition-all`
 - Do not use default Tailwind blue/indigo as primary color
-- Do not use cold, sterile corporate aesthetics — CompSF is warm and human</span>
-  </div>
-</div>
-<script>
-function copyMd() {
-  const raw = document.getElementById('mdtext').innerText;
-  navigator.clipboard.writeText(raw).then(() => {
-    const btn = document.querySelector('.copy-btn');
-    btn.textContent = 'Copied!';
-    setTimeout(() => btn.textContent = 'Copy', 2000);
-  });
-}
-</script>
+- Do not use cold, sterile corporate aesthetics — CompSF is warm and human
+- Do not hide the hero video on mobile
+
+---
+
+## Stable Restore Point
+- Git tag: `v1.0-reviews-working` (tagged on GitHub — safe fallback if things break)
