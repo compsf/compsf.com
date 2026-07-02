@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RMM Agent Downloads — CompSF</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: 'WildanCar';
+      src: url('../Wildan carFont - Adegoke.ttf') format('truetype');
+      font-weight: normal; font-style: normal;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:       #1c1c1c;
+      --charcoal:    #2d2d2d;
+      --orange:      #e07020;
+      --blood-orange:#bf3500;
+      --sf-red:      #9b1520;
+      --white:       #ffffff;
+      --off-white:   #f8f8f8;
+      --light-grey:  #f2f2f2;
+      --border:      #e0e0e0;
+      --text-muted:  #666666;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--off-white);
+      color: var(--black);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      background: var(--charcoal);
+      padding: 20px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 4px solid var(--orange);
+    }
+    .page-header img { height: 42px; }
+    .header-badge {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+    }
+
+    /* ── Hero band ── */
+    .page-hero {
+      background: var(--black);
+      padding: 52px 5% 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute; top: 0; right: 0; width: 40%; height: 100%;
+      background: linear-gradient(135deg, transparent 40%, rgba(191,53,0,0.10) 100%);
+      pointer-events: none;
+    }
+    .page-hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+    .page-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(224,112,32,0.15); border: 1px solid rgba(224,112,32,0.35);
+      color: var(--orange); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px; margin-bottom: 18px;
+    }
+    .page-tag::before {
+      content: ''; width: 6px; height: 6px;
+      background: var(--orange); border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .page-title {
+      font-family: 'WildanCar', 'Inter', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700; color: var(--white); line-height: 1.15;
+      letter-spacing: -0.03em; margin-bottom: 10px;
+    }
+    .page-title span { color: var(--orange); }
+    .page-subtitle {
+      font-size: 0.95rem; color: rgba(255,255,255,0.5); line-height: 1.7;
+    }
+
+    /* ── Main content ── */
+    .page-body { max-width: 900px; margin: 0 auto; padding: 48px 5% 80px; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--orange);
+      margin-bottom: 16px;
+    }
+
+    /* ── Client cards ── */
+    .clients-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .client-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 20px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .client-card:hover {
+      border-color: var(--orange);
+      box-shadow: 0 4px 20px rgba(224,112,32,0.08);
+    }
+    .client-name {
+      font-size: 1rem; font-weight: 600; color: var(--black);
+      margin-bottom: 3px;
+    }
+    .client-note {
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+    .client-actions {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;
+    }
+
+    .dl-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 600; text-decoration: none;
+      transition: transform 0.15s ease, background 0.15s ease;
+      white-space: nowrap;
+    }
+    .dl-btn:hover { transform: translateY(-1px); }
+    .dl-btn:active { transform: translateY(0); }
+
+    .dl-btn.mac {
+      background: var(--black); color: var(--white);
+    }
+    .dl-btn.mac:hover { background: #333; }
+
+    .dl-btn.pc {
+      background: var(--orange); color: var(--white);
+    }
+    .dl-btn.pc:hover { background: var(--blood-orange); }
+
+    .dl-btn.placeholder {
+      background: var(--light-grey); color: var(--text-muted);
+      cursor: default; pointer-events: none;
+    }
+
+    .dl-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    /* ── General download row (no specific client) ── */
+    .general-section {
+      margin-bottom: 40px;
+      padding: 24px;
+      background: var(--charcoal);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .general-section-text h3 {
+      font-family: 'WildanCar', 'Inter', sans-serif;
+      font-size: 1.15rem; color: var(--white); margin-bottom: 4px;
+    }
+    .general-section-text p {
+      font-size: 0.82rem; color: rgba(255,255,255,0.45);
+    }
+    .general-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ── Empty state ── */
+    .empty-hint {
+      text-align: center; padding: 40px 20px;
+      color: var(--text-muted); font-size: 0.88rem; line-height: 1.7;
+      border: 2px dashed var(--border); border-radius: 14px; margin-top: 12px;
+    }
+    .empty-hint strong { color: var(--black); }
+
+    /* ── Footer ── */
+    .page-footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+    .page-footer a { color: var(--orange); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="page-header">
+    <a href="/"><img src="../Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></a>
+    <span class="header-badge">Internal Use Only</span>
+  </header>
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-tag">Secure Access</div>
+      <h1 class="page-title">RMM Agent <span>Downloads</span></h1>
+      <p class="page-subtitle">CompSF managed device agents — for authorized client installations only.</p>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="page-body">
+
+    <!-- General / Rainbow agents -->
+    <div class="general-section">
+      <div class="general-section-text">
+        <h3>Rainbow / Syncro Agent</h3>
+        <p>Standard RMM agent — use when no client-specific link is listed below.</p>
+      </div>
+      <div class="general-actions">
+        <a href="/rmm-agents/Rainbow-SyncroDesktop-Mac.pkg" class="dl-btn mac" download>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Mac (.pkg)
+        </a>
+        <a href="/rmm-agents/Rainbow-SyncroDesktop-PC.exe" class="dl-btn pc" download>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12V6.75l6-1.32v6.57H3zm17 0V5.25L11 3v9h9zM3 18.75V13h6v6.57l-6-1.32zM20 19.25L11 21v-8h9v6.25z"/></svg>
+          Windows (.exe)
+        </a>
+      </div>
+    </div>
+
+    <!-- Per-client section -->
+    <p class="section-label">Client-Specific Links</p>
+    <div class="clients-list">
+
+      <!-- ↓↓↓ ADD CLIENT CARDS HERE ↓↓↓ -->
+
+      <div class="empty-hint">
+        <strong>No client-specific links yet.</strong><br>
+        Links will appear here once added — share this page URL directly with clients.
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <a href="/">← Back to CompSF.com</a> &nbsp;·&nbsp; Internal use only — do not share publicly
+  </footer>
+
+</body>
+</html>
