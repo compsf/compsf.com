@@ -448,8 +448,21 @@
 
       const u = document.getElementById('u').value.trim();
       const p = document.getElementById('p').value;
-      const hash = await sha256(u + ':' + p);
       const errBox = document.getElementById('login-error');
+
+      let hash;
+      try {
+        hash = await sha256(u + ':' + p);
+      } catch (err) {
+        errBox.textContent = 'Browser security error — ensure you are on https://compsf.com';
+        errBox.classList.add('show');
+        console.error('crypto.subtle failed:', err);
+        return;
+      }
+
+      console.debug('[CSF-RMM] computed:', hash);
+      console.debug('[CSF-RMM] expected:', EXPECTED);
+      console.debug('[CSF-RMM] match:', hash === EXPECTED);
 
       if (hash === EXPECTED) {
         errBox.classList.remove('show');
@@ -457,6 +470,7 @@
       } else {
         attempts++;
         updateDots(attempts);
+        errBox.textContent = 'Incorrect username or password.';
         errBox.classList.add('show');
         if (attempts >= MAX_ATTEMPTS) {
           lockedUntil = Date.now() + LOCKOUT_MS;
