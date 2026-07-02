@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Secure Access — CompSF</title>
+  <title>RMM Agent Downloads — CompSF</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,125 +35,6 @@
       min-height: 100vh;
     }
 
-    /* ════════════════════════════════
-       LOGIN SCREEN
-    ════════════════════════════════ */
-    #login-screen {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--black);
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px;
-    }
-    #login-screen.hidden { display: none; }
-
-    /* background accent */
-    #login-screen::before {
-      content: '';
-      position: absolute; top: -20%; right: -10%;
-      width: 600px; height: 600px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(191,53,0,0.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .login-card {
-      background: var(--charcoal);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 44px 40px 36px;
-      width: 100%; max-width: 400px;
-      position: relative; z-index: 1;
-    }
-
-    .login-logo {
-      display: block; height: 36px; margin-bottom: 32px;
-    }
-
-    .login-title {
-      font-family: 'WildanCar', 'Inter', sans-serif;
-      font-size: 1.55rem; font-weight: 700;
-      color: var(--white); letter-spacing: -0.02em;
-      margin-bottom: 6px;
-    }
-    .login-subtitle {
-      font-size: 0.82rem; color: rgba(255,255,255,0.4);
-      margin-bottom: 32px; line-height: 1.6;
-    }
-
-    .login-field { margin-bottom: 16px; }
-    .login-field label {
-      display: block; font-size: 0.75rem; font-weight: 600;
-      letter-spacing: 0.8px; text-transform: uppercase;
-      color: rgba(255,255,255,0.5); margin-bottom: 7px;
-    }
-    .login-field input {
-      width: 100%; padding: 11px 14px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 9px; color: var(--white);
-      font-size: 0.92rem; font-family: 'Inter', sans-serif;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-    .login-field input:focus {
-      border-color: var(--orange);
-      background: rgba(255,255,255,0.09);
-    }
-    .login-field input::placeholder { color: rgba(255,255,255,0.22); }
-
-    .login-error {
-      background: rgba(155,21,32,0.25);
-      border: 1px solid rgba(155,21,32,0.5);
-      color: #f87171; border-radius: 8px;
-      padding: 10px 14px; font-size: 0.82rem;
-      margin-bottom: 16px; display: none;
-    }
-    .login-error.show { display: block; }
-
-    .login-lockout {
-      background: rgba(191,53,0,0.2);
-      border: 1px solid rgba(191,53,0,0.45);
-      color: #fdba74; border-radius: 8px;
-      padding: 10px 14px; font-size: 0.82rem;
-      margin-bottom: 16px; display: none;
-    }
-    .login-lockout.show { display: block; }
-
-    .login-btn {
-      width: 100%; padding: 13px;
-      background: var(--orange); color: var(--white);
-      border: none; border-radius: 9px;
-      font-size: 0.92rem; font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      cursor: pointer; margin-top: 4px;
-      transition: background 0.2s ease, transform 0.15s ease;
-    }
-    .login-btn:hover { background: var(--blood-orange); transform: translateY(-1px); }
-    .login-btn:active { transform: translateY(0); }
-    .login-btn:disabled { background: #555; cursor: not-allowed; transform: none; }
-
-    .login-footer {
-      text-align: center; margin-top: 22px;
-      font-size: 0.72rem; color: rgba(255,255,255,0.2);
-    }
-
-    /* attempt dots */
-    .attempt-dots {
-      display: flex; gap: 5px; justify-content: center;
-      margin-top: 14px;
-    }
-    .attempt-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      transition: background 0.2s ease;
-    }
-    .attempt-dot.used { background: #f87171; }
-
-    /* ════════════════════════════════
-       MAIN PAGE (hidden until auth)
-    ════════════════════════════════ */
-    #main-content { display: none; }
-    #main-content.visible { display: block; }
-
     /* ── Header ── */
     .page-header {
       background: var(--charcoal);
@@ -162,18 +43,10 @@
       border-bottom: 4px solid var(--orange);
     }
     .page-header img { height: 42px; }
-    .header-right { display: flex; align-items: center; gap: 16px; }
     .header-badge {
       font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px;
       text-transform: uppercase; color: rgba(255,255,255,0.45);
     }
-    .logout-btn {
-      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.4);
-      background: none; border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 6px; padding: 5px 12px; cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .logout-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.4); }
 
     /* ── Hero band ── */
     .page-hero {
@@ -279,213 +152,54 @@
 </head>
 <body>
 
-  <!-- ═══════════════════════════════
-       LOGIN SCREEN
-  ═══════════════════════════════ -->
-  <div id="login-screen">
-    <div class="login-card">
-      <img src="../Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" class="login-logo" />
-      <h1 class="login-title">Secure Access</h1>
-      <p class="login-subtitle">Internal portal — authorized personnel only.</p>
+  <header class="page-header">
+    <a href="/"><img src="../Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></a>
+    <span class="header-badge">Internal Use Only</span>
+  </header>
 
-      <div class="login-error" id="login-error">Incorrect username or password.</div>
-      <div class="login-lockout" id="login-lockout"></div>
-
-      <form id="login-form" autocomplete="off">
-        <div class="login-field">
-          <label for="u">Username</label>
-          <input type="text" id="u" name="username" placeholder="Enter username" autocomplete="off" spellcheck="false" />
-        </div>
-        <div class="login-field">
-          <label for="p">Password</label>
-          <input type="password" id="p" name="password" placeholder="Enter password" autocomplete="off" />
-        </div>
-        <button type="submit" class="login-btn" id="login-btn">Sign In →</button>
-      </form>
-
-      <div class="attempt-dots">
-        <div class="attempt-dot" id="d1"></div>
-        <div class="attempt-dot" id="d2"></div>
-        <div class="attempt-dot" id="d3"></div>
-        <div class="attempt-dot" id="d4"></div>
-        <div class="attempt-dot" id="d5"></div>
-      </div>
-
-      <p class="login-footer">CompSF IT &amp; Cyber Solutions &nbsp;·&nbsp; Internal Use Only</p>
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-tag">Secure Access</div>
+      <h1 class="page-title">RMM Agent <span>Downloads</span></h1>
+      <p class="page-subtitle">CompSF managed device agents — for authorized client installations only.</p>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════
-       MAIN CONTENT (hidden until auth)
-  ═══════════════════════════════ -->
-  <div id="main-content">
+  <div class="page-body">
 
-    <header class="page-header">
-      <a href="/"><img src="../Logo_CompSF_wTagline_White_02_RGB.png" alt="CompSF" /></a>
-      <div class="header-right">
-        <span class="header-badge">Internal Use Only</span>
-        <button class="logout-btn" onclick="logout()">Sign Out</button>
+    <div class="general-section">
+      <div class="general-section-text">
+        <h3>Rainbow / Syncro Agent</h3>
+        <p>Standard RMM agent — use when no client-specific link is listed below.</p>
       </div>
-    </header>
-
-    <div class="page-hero">
-      <div class="page-hero-inner">
-        <div class="page-tag">Secure Access</div>
-        <h1 class="page-title">RMM Agent <span>Downloads</span></h1>
-        <p class="page-subtitle">CompSF managed device agents — for authorized client installations only.</p>
+      <div class="general-actions">
+        <a href="/rmm-agents/Rainbow-SyncroDesktop-Mac.pkg" class="dl-btn mac" download>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Mac (.pkg)
+        </a>
+        <a href="/rmm-agents/Rainbow-SyncroDesktop-PC.exe" class="dl-btn pc" download>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12V6.75l6-1.32v6.57H3zm17 0V5.25L11 3v9h9zM3 18.75V13h6v6.57l-6-1.32zM20 19.25L11 21v-8h9v6.25z"/></svg>
+          Windows (.exe)
+        </a>
       </div>
     </div>
 
-    <div class="page-body">
+    <p class="section-label">Client-Specific Links</p>
+    <div class="clients-list">
 
-      <div class="general-section">
-        <div class="general-section-text">
-          <h3>Rainbow / Syncro Agent</h3>
-          <p>Standard RMM agent — use when no client-specific link is listed below.</p>
-        </div>
-        <div class="general-actions">
-          <a href="/rmm-agents/Rainbow-SyncroDesktop-Mac.pkg" class="dl-btn mac" download>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            Mac (.pkg)
-          </a>
-          <a href="/rmm-agents/Rainbow-SyncroDesktop-PC.exe" class="dl-btn pc" download>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12V6.75l6-1.32v6.57H3zm17 0V5.25L11 3v9h9zM3 18.75V13h6v6.57l-6-1.32zM20 19.25L11 21v-8h9v6.25z"/></svg>
-            Windows (.exe)
-          </a>
-        </div>
+      <!-- ↓↓↓ ADD CLIENT CARDS HERE ↓↓↓ -->
+
+      <div class="empty-hint">
+        <strong>No client-specific links yet.</strong><br>
+        Links will appear here once added.
       </div>
 
-      <p class="section-label">Client-Specific Links</p>
-      <div class="clients-list">
-
-        <!-- ↓↓↓ ADD CLIENT CARDS HERE ↓↓↓ -->
-
-        <div class="empty-hint">
-          <strong>No client-specific links yet.</strong><br>
-          Links will appear here once added.
-        </div>
-
-      </div>
     </div>
-
-    <footer class="page-footer">
-      <a href="/">← Back to CompSF.com</a> &nbsp;·&nbsp; Internal use only — do not distribute
-    </footer>
-
   </div>
 
-  <script>
-    // SHA-256 hash of "CSF-RMM-AGT:S^KDShhf^dh67#789dh^6_7e53g8"
-    const EXPECTED = '936d2bb874e6fad40210e168ebb5dc9fbc115f9cdb96086a9816d0411185786b';
-    const SESSION_KEY = 'csf_rmm_auth';
-    const SESSION_TTL = 4 * 60 * 60 * 1000; // 4 hours
-    const MAX_ATTEMPTS = 5;
-    const LOCKOUT_MS  = 30 * 1000; // 30 seconds
-
-    let attempts = 0;
-    let lockedUntil = 0;
-
-    async function sha256(str) {
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-    }
-
-    function isAuthenticated() {
-      try {
-        const raw = sessionStorage.getItem(SESSION_KEY);
-        if (!raw) return false;
-        const { token, expires } = JSON.parse(raw);
-        if (Date.now() > expires) { sessionStorage.removeItem(SESSION_KEY); return false; }
-        return token === EXPECTED;
-      } catch { return false; }
-    }
-
-    function grantAccess() {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({
-        token: EXPECTED,
-        expires: Date.now() + SESSION_TTL
-      }));
-      document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('main-content').classList.add('visible');
-    }
-
-    function logout() {
-      sessionStorage.removeItem(SESSION_KEY);
-      location.reload();
-    }
-
-    function updateDots(n) {
-      for (let i = 1; i <= 5; i++) {
-        document.getElementById('d' + i).classList.toggle('used', i <= n);
-      }
-    }
-
-    function showLockout(ms) {
-      const btn = document.getElementById('login-btn');
-      const box = document.getElementById('login-lockout');
-      btn.disabled = true;
-      const end = Date.now() + ms;
-      const tick = () => {
-        const left = Math.ceil((end - Date.now()) / 1000);
-        if (left <= 0) {
-          box.classList.remove('show'); box.textContent = '';
-          btn.disabled = false;
-          attempts = 0; lockedUntil = 0;
-          updateDots(0);
-          return;
-        }
-        box.textContent = `Too many attempts. Try again in ${left}s.`;
-        box.classList.add('show');
-        setTimeout(tick, 500);
-      };
-      tick();
-    }
-
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      if (Date.now() < lockedUntil) return;
-
-      const u = document.getElementById('u').value.trim();
-      const p = document.getElementById('p').value;
-      const errBox = document.getElementById('login-error');
-
-      let hash;
-      try {
-        hash = await sha256(u + ':' + p);
-      } catch (err) {
-        errBox.textContent = 'Browser security error — ensure you are on https://compsf.com';
-        errBox.classList.add('show');
-        console.error('crypto.subtle failed:', err);
-        return;
-      }
-
-      console.debug('[CSF-RMM] computed:', hash);
-      console.debug('[CSF-RMM] expected:', EXPECTED);
-      console.debug('[CSF-RMM] match:', hash === EXPECTED);
-
-      if (hash === EXPECTED) {
-        errBox.classList.remove('show');
-        grantAccess();
-      } else {
-        attempts++;
-        updateDots(attempts);
-        errBox.textContent = 'Incorrect username or password.';
-        errBox.classList.add('show');
-        if (attempts >= MAX_ATTEMPTS) {
-          lockedUntil = Date.now() + LOCKOUT_MS;
-          errBox.classList.remove('show');
-          showLockout(LOCKOUT_MS);
-        }
-      }
-    });
-
-    // Check existing session on load
-    if (isAuthenticated()) {
-      document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('main-content').classList.add('visible');
-    }
-  </script>
+  <footer class="page-footer">
+    <a href="/">← Back to CompSF.com</a> &nbsp;·&nbsp; Internal use only — do not distribute
+  </footer>
 
 </body>
 </html>
